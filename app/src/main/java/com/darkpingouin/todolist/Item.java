@@ -1,5 +1,6 @@
 package com.darkpingouin.todolist;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -38,9 +39,16 @@ public class Item {
         this.text = text;
     }
 
-    public Date getDueDate()
+    public String getDueDate()
     {
-        return this.dueDate;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(this.dueDate);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        String sday = String.format("%02d", day);
+        String smonth = String.format("%02d", month);
+        return ("due til " + sday + "/" + smonth + "/" + year);
     }
 
     public void setDueDate(Date dueDate)
