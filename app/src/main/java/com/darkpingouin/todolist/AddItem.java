@@ -2,36 +2,54 @@ package com.darkpingouin.todolist;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+
+import static com.darkpingouin.todolist.R.id.date;
 
 public class AddItem extends AppCompatActivity {
     private DatePicker datePicker;
     private Calendar calendar;
-    private TextView dateView;
-    private int year, month, day;
+    private TextView dateView, timeView;
+    private int year, month, day, hour, minute;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
-        dateView = (TextView) findViewById(R.id.date);
+        dateView = (TextView) findViewById(date);
+        timeView = (TextView) findViewById(R.id.time);
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
 
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
-        showDate(year, month+1, day);
+        hour = calendar.get(Calendar.HOUR);
+        minute = calendar.get(Calendar.MINUTE);
+        try {
+            showDate(year, month+1, day);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        showTime(hour, minute);
     }
 
         @SuppressWarnings("deprecation")
         public void setDate(View view) {
-            showDialog(999);
-        }
+        showDialog(999);
+    }
+    public void setTime(View view) {
+        showDialog(998);
+    }
 
         @Override
         protected Dialog onCreateDialog(int id) {
@@ -39,6 +57,11 @@ public class AddItem extends AppCompatActivity {
             if (id == 999) {
                 return new DatePickerDialog(this,
                         myDateListener, year, month, day);
+            }
+
+            if (id == 998)
+            {
+                return new TimePickerDialog(this, myTimeListener, hour, minute, true);
             }
             return null;
         }
@@ -52,11 +75,35 @@ public class AddItem extends AppCompatActivity {
                         // arg1 = year
                         // arg2 = month
                         // arg3 = day
-                        showDate(arg1, arg2+1, arg3);
+                        try {
+                            showDate(arg1, arg2+1, arg3);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                 };
+    private TimePickerDialog.OnTimeSetListener myTimeListener = new
+            TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker arg0,
+                                      int arg1, int arg2) {
+                    // TODO Auto-generated method stub
+                    // arg1 = year
+                    // arg2 = month
+                    // arg3 = day
+                    showTime(arg1, arg2);
+                }
+            };
+        private void showDate(int year, int month, int day) throws ParseException {
+            String d = (String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year);
+            SimpleDateFormat newDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date MyDate = newDateFormat.parse(d);
+            newDateFormat.applyPattern("EE d MMM yyyy");
+            String MySDate = newDateFormat.format(MyDate);
+            dateView.setText(MySDate);
 
-        private void showDate(int year, int month, int day) {
-            dateView.setText(String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year);
         }
+    private void showTime(int hour, int minute) {
+        timeView.setText(String.format("%02d", hour) + ":" + String.format("%02d", minute));
+    }
     }
