@@ -15,7 +15,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddItem"></activity>
+        <activity android:name=".AddItem" />
+        <activity android:name=".EditItem"></activity>
     </application>
 
 </manifest>

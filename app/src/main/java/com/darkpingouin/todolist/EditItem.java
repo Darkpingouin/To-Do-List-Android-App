@@ -14,45 +14,35 @@ import android.widget.TimePicker;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
-import static com.darkpingouin.todolist.R.id.date;
+public class EditItem extends AppCompatActivity {
 
-public class AddItem extends AppCompatActivity {
-    private DatePicker datePicker;
-    private Calendar calendar;
-    private TextView dateView, timeView;
-    private int year, month, day, hour, minute;
-
+    int year, month, day, hour, minute;
+    boolean editDate = false;
+    boolean editTime = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_item);
-        dateView = (TextView) findViewById(date);
-        timeView = (TextView) findViewById(R.id.time);
-        calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-        hour = calendar.get(Calendar.HOUR_OF_DAY);
-        minute = calendar.get(Calendar.MINUTE);
-        try {
-            showDate(year, month + 1, day);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        showTime(hour, minute);
+        setContentView(R.layout.activity_edit_item);
+        String title = getIntent().getStringExtra("title");
+        String txt = getIntent().getStringExtra("txt");
+        String date = getIntent().getStringExtra("date");
+        String time = getIntent().getStringExtra("time");
+        ((TextView) findViewById(R.id.time2)).setText(time);
+        ((TextView) findViewById(R.id.date2)).setText(date);
+        ((TextView) findViewById(R.id.title)).setText(title);
+        ((TextView) findViewById(R.id.txt)).setText(txt);
     }
 
-    @SuppressWarnings("deprecation")
     public void setDate(View view) {
-        showDialog(999);
+        if (editDate)
+            showDialog(999);
     }
 
     public void setTime(View view) {
-        showDialog(998);
+        if (editTime)
+            showDialog(998);
     }
 
     @Override
@@ -104,32 +94,62 @@ public class AddItem extends AppCompatActivity {
         Date MyDate = newDateFormat.parse(d);
         newDateFormat.applyPattern("EE d MMM yyyy");
         String MySDate = newDateFormat.format(MyDate);
-        dateView.setText(MySDate);
-
+        ((TextView) findViewById(R.id.date2)).setText(MySDate);
     }
 
     private void showTime(int hour, int minute) {
-        timeView.setText(String.format("%02d", hour) + ":" + String.format("%02d", minute));
+        ((TextView) findViewById(R.id.time2)).setText(String.format("%02d", hour) + ":" + String.format("%02d", minute));
     }
-
-    public void cancel(View view)
+    public void edit(View v)
     {
-        Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_CANCELED,returnIntent);
-        finish();
+        TextView textView = (TextView) findViewById(R.id.txt);
+        textView.setFocusable(true);
+        textView.setFocusableInTouchMode(true);
+        TextView titleView = (TextView) findViewById(R.id.title);
+        titleView.setFocusable(true);
+        titleView.setFocusableInTouchMode(true);
+        editDate = true;
+        editTime = true;
+        TextView save = (TextView) findViewById(R.id.save);
+        save.setVisibility(View.VISIBLE);
     }
 
-    public void save(View view)
+    public void delete(View v)
     {
         String title = ((TextView) findViewById(R.id.title)).getText().toString();
         String txt = ((TextView) findViewById(R.id.txt)).getText().toString();
-        String d = ((TextView) findViewById(R.id.date)).getText().toString() + " " + ((TextView) findViewById(R.id.time)).getText().toString();
+        String d = ((TextView) findViewById(R.id.date2)).getText().toString() + " " + ((TextView) findViewById(R.id.time2)).getText().toString();
         Intent returnIntent = new Intent();
         returnIntent.putExtra("title",title);
         returnIntent.putExtra("txt", txt);
         returnIntent.putExtra("date", d);
-        returnIntent.putExtra("edit", "false");
+        returnIntent.putExtra("edit", "true");
+        returnIntent.putExtra("position", getIntent().getStringExtra("position"));
+        returnIntent.putExtra("delete", "true");
         setResult(Activity.RESULT_OK,returnIntent);
+        finish();
+    }
+
+    public void save(View v)
+    {
+        String title = ((TextView) findViewById(R.id.title)).getText().toString();
+        String txt = ((TextView) findViewById(R.id.txt)).getText().toString();
+        String d = ((TextView) findViewById(R.id.date2)).getText().toString() + " " + ((TextView) findViewById(R.id.time2)).getText().toString();
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("title",title);
+        returnIntent.putExtra("txt", txt);
+        returnIntent.putExtra("date", d);
+        returnIntent.putExtra("edit", "true");
+        returnIntent.putExtra("position", getIntent().getStringExtra("position"));
+        returnIntent.putExtra("delete", "false");
+        setResult(Activity.RESULT_OK,returnIntent);
+        finish();
+    }
+
+    public void cancel(View v)
+    {
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED,returnIntent);
         finish();
     }
 }

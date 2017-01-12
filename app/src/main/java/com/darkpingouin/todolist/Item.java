@@ -49,6 +49,19 @@ public class Item {
         String MySDate = "due till " + newDateFormat.format(this.dueDate);
         return MySDate;
     }
+    public String getDate()
+    {
+        SimpleDateFormat newDateFormat = new SimpleDateFormat("EE d MMM yyyy");
+        String MySDate = newDateFormat.format(this.dueDate);
+        return MySDate;
+    }
+
+    public String getTime()
+    {
+        SimpleDateFormat newDateFormat = new SimpleDateFormat("HH:mm");
+        String MySDate = newDateFormat.format(this.dueDate);
+        return MySDate;
+    }
 
     public void setDueDate(Date dueDate)
     {
