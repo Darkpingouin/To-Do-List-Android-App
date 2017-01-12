@@ -16,6 +16,7 @@
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:onClick="cancel"
             android:src="@drawable/cancel"/>
         <TextView
             android:layout_width="wrap_content"
@@ -23,7 +24,8 @@
             android:textColor="#FFFFFF"
             android:textSize="20dp"
             android:layout_alignParentEnd="true"
-            android:text="Enregistrer"/>
+            android:text="Enregistrer"
+            android:onClick="save"/>
     </RelativeLayout>
     <EditText
         android:layout_width="match_parent"
@@ -36,7 +38,7 @@
         android:text="Title"
         android:ems="10"
         android:textStyle="bold"
-        android:id="@+id/editText" />
+        android:id="@+id/title" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -78,6 +80,6 @@
         android:inputType="textMultiLine"
         android:text="To do..."
         android:ems="10"
-        android:id="@+id/editText3" />
+        android:id="@+id/txt" />
 
 </LinearLayout>

@@ -1,6 +1,6 @@
 package com.darkpingouin.todolist;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -45,14 +45,9 @@ public class Item {
 
     public String getDueDate()
     {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(this.dueDate);
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        String sday = String.format("%02d", day);
-        String smonth = String.format("%02d", month);
-        return ("due til " + sday + "/" + smonth + "/" + year);
+        SimpleDateFormat newDateFormat = new SimpleDateFormat("dd/MM/yyyy\nHH:mm");
+        String MySDate = "due till " + newDateFormat.format(this.dueDate);
+        return MySDate;
     }
 
     public void setDueDate(Date dueDate)
