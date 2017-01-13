@@ -1,6 +1,7 @@
 package com.darkpingouin.todolist;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -8,6 +9,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +35,15 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mListView = (ListView) findViewById(R.id.listView);
+        try {
+            getData();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        }
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -40,14 +59,157 @@ public class MainActivity extends ActionBarActivity {
                 intentMain.putExtra("date", date);
                 intentMain.putExtra("time", time);
                 startActivityForResult(intentMain, 1);
-                /*Item item = (Item) mListView.getAdapter().getItem(position);
-                item.setText("lkjlkjlk");
-                ItemAdapter a = (ItemAdapter) mListView.getAdapter();
-                a.notifyDataSetChanged();*/
             }
         });
         ItemAdapter adapter = new ItemAdapter(MainActivity.this, items);
         mListView.setAdapter(adapter);
+    }
+
+    public List<Item> dataToItems(String data) throws ParseException, XmlPullParserException, IOException {
+        List<Item> list = new ArrayList<>();
+        Item tmp;
+        String title = "";
+        String txt = "";
+        Date date = new Date();
+        int f = 0;
+
+        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        XmlPullParser xpp = factory.newPullParser();
+        xpp.setInput(new StringReader(data));
+        int eventType = xpp.getEventType();
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            if (eventType == XmlPullParser.TEXT) {
+                if (f == 0)
+                    title = xpp.getText();
+                else if (f == 1)
+                {
+                    String d = xpp.getText();
+                    SimpleDateFormat newDateFormat = new SimpleDateFormat("EE d MMM yyyyHH:mm");
+                    date = newDateFormat.parse(d);
+                }
+                else if (f == 3)
+                    txt = xpp.getText();
+                f++;
+            }
+            if (f == 4)
+            {
+                System.out.println("lklkj");
+                tmp = new Item(title, txt, date);
+                list.add(tmp);
+                f = 0;
+            }
+            eventType = xpp.next();
+        }
+        return list;
+    }
+
+    public void getData() throws ParseException, IOException, XmlPullParserException {
+        int c;
+        String temp = "";
+        System.out.println("MDRRRRRRRRRRR1");
+        FileInputStream fin = null;
+        try {
+            fin = openFileInput("tasksSave");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            while ((c = fin.read()) != -1) {
+                temp = temp + Character.toString((char) c);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(temp);
+        try {
+            fin.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("MDRRRRRRRRRRR2");
+        items = dataToItems(temp);
+    }
+
+    public void saveData() {
+        FileOutputStream fOut = null;
+        try {
+            fOut = openFileOutput("tasksSave", Context.MODE_PRIVATE);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        ItemAdapter a = (ItemAdapter) mListView.getAdapter();
+        Item tmp;
+
+        for (int i = 0; i < a.getCount(); i++) {
+            tmp = a.getItem(i);
+            try {
+                fOut.write(("<t>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(tmp.getTitle().getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(("</t>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(("<d>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write((tmp.getDate() + tmp.getTime()).getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(("</d>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(("<s>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write((tmp.getStatus().toString()).getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(("</s>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(("<x>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write((tmp.getText()).getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(("</x>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            fOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Date getDate(int day, int month, int year, int hour, int min) {
@@ -85,34 +247,43 @@ public class MainActivity extends ActionBarActivity {
                 }
                 if (data.getStringExtra("edit").equals("true")) {
                     int position = Integer.parseInt(data.getStringExtra("position"));
-                    modifyItem(position, title, txt, d, delete);
+                    try {
+                        modifyItem(position, title, txt, d, delete);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Item newItem = new Item(title, txt, d);
-                    addToList(newItem);
+                    try {
+                        addToList(newItem);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //here goes nothing
             }
         }
-    }//onActivityResult
+    }
 
-    public void addToList(Item item) {
+    public void addToList(Item item) throws ParseException {
         ItemAdapter a = (ItemAdapter) mListView.getAdapter();
         a.add(item);
         a.notifyDataSetChanged();
+        saveData();
     }
 
-    public void modifyItem(int position, String title, String txt, Date d, String delete) {
+    public void modifyItem(int position, String title, String txt, Date d, String delete) throws ParseException {
         ItemAdapter a = (ItemAdapter) mListView.getAdapter();
         Item item = (Item) mListView.getAdapter().getItem(position);
         if (delete.equals("false")) {
             item.setTitle(title);
             item.setText(txt);
             item.setDueDate(d);
-        }
-        else
+        } else
             a.remove(item);
         a.notifyDataSetChanged();
+        saveData();
     }
 }
