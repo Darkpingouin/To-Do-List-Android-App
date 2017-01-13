@@ -133,7 +133,7 @@ public class EditItem extends AppCompatActivity {
     public void save(View v)
     {
         String title = ((TextView) findViewById(R.id.title)).getText().toString();
-        String txt = ((TextView) findViewById(R.id.txt)).getText().toString();
+        String txt = ((TextView) findViewById(R.id.txt)).getText().toString().replace('<', ' ');
         String d = ((TextView) findViewById(R.id.date2)).getText().toString() + " " + ((TextView) findViewById(R.id.time2)).getText().toString();
         Intent returnIntent = new Intent();
         returnIntent.putExtra("title",title);

@@ -94,7 +94,6 @@ public class MainActivity extends ActionBarActivity {
             }
             if (f == 4)
             {
-                System.out.println("lklkj");
                 tmp = new Item(title, txt, date);
                 list.add(tmp);
                 f = 0;
@@ -107,7 +106,6 @@ public class MainActivity extends ActionBarActivity {
     public void getData() throws ParseException, IOException, XmlPullParserException {
         int c;
         String temp = "";
-        System.out.println("MDRRRRRRRRRRR1");
         FileInputStream fin = null;
         try {
             fin = openFileInput("tasksSave");
@@ -128,7 +126,6 @@ public class MainActivity extends ActionBarActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("MDRRRRRRRRRRR2");
         items = dataToItems(temp);
     }
 
