@@ -23,7 +23,6 @@
         android:textStyle="bold"
         tools:text="Title"
         />
-
     <TextView
         android:id="@+id/text"
         android:maxLength="140"
@@ -44,5 +43,4 @@
         android:textStyle="italic"
         tools:text="due to 25/11"
         />
-
 </RelativeLayout>

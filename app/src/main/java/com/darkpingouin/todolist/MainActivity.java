@@ -63,6 +63,7 @@ public class MainActivity extends ActionBarActivity {
         });
         ItemAdapter adapter = new ItemAdapter(MainActivity.this, items);
         mListView.setAdapter(adapter);
+        checkDate();
     }
 
     public List<Item> dataToItems(String data) throws ParseException, XmlPullParserException, IOException {
@@ -264,10 +265,28 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    public void checkDate()
+    {
+        int i = 0;
+        Date d;
+
+        d = new Date();
+        ItemAdapter a = (ItemAdapter)mListView.getAdapter();
+        while (i < a.getCount())
+        {
+            if (!(a.getItem(i).getRealDate().after(d)))
+            {
+                a.getItem(i).setDateColor("#FF0000");
+            }
+            i++;
+        }
+    }
+
     public void addToList(Item item) throws ParseException {
         ItemAdapter a = (ItemAdapter) mListView.getAdapter();
         a.add(item);
         a.notifyDataSetChanged();
+        checkDate();
         saveData();
     }
 
@@ -280,6 +299,7 @@ public class MainActivity extends ActionBarActivity {
             item.setDueDate(d);
         } else
             a.remove(item);
+        checkDate();
         a.notifyDataSetChanged();
         saveData();
     }

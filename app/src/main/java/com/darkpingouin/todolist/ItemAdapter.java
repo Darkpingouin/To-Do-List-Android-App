@@ -1,6 +1,7 @@
 package com.darkpingouin.todolist;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
         Item Item = getItem(position);
         viewHolder.title.setText(Item.getTitle());
+        viewHolder.date.setTextColor(Color.parseColor(Item.getDateColor()));
         viewHolder.text.setText(Item.getText());
         viewHolder.date.setText(Item.getDueDate());
 
