@@ -23,7 +23,6 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="nb Tasks"
-                android:onClick="refresh"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:textSize="18dp"

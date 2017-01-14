@@ -14,6 +14,8 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.daimajia.swipe.SwipeLayout;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -390,8 +392,25 @@ public class MainActivity extends ActionBarActivity {
         adapter.notifyDataSetChanged();
     }
 
-    public void refresh(View v)
-    {
-        affListCorresponding();
+
+    public void todoClick(View v) {
+        final int position = mListView.getPositionForView((View) v.getParent());
+        SwipeLayout s = (SwipeLayout) mListView.getChildAt(position);
+        Item a = items.get(position);
+        a.setStatus(Item.Status.TODO);
+        s.close(true);
+        ItemAdapter b = (ItemAdapter) mListView.getAdapter();
+        b.notifyDataSetChanged();
     }
+
+    public void doneClick(View v) {
+        final int position = mListView.getPositionForView((View) v.getParent());
+        SwipeLayout s = (SwipeLayout) mListView.getChildAt(position);
+        Item a = items.get(position);
+        a.setStatus(Item.Status.DONE);
+        s.close(true);
+        ItemAdapter b = (ItemAdapter) mListView.getAdapter();
+        b.notifyDataSetChanged();
+    }
+
 }

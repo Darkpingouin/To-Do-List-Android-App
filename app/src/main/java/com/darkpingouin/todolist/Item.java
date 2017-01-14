@@ -1,5 +1,9 @@
 package com.darkpingouin.todolist;
 
+import android.graphics.Color;
+
+import com.daimajia.swipe.SwipeLayout;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,6 +19,7 @@ public class Item {
     private Date dueDate;
     private Status status;
     private String dateColor;
+    public SwipeLayout s;
     public enum Status {TODO, DONE}
     public Item(String title, String text, Date dueDate)
     {
@@ -78,6 +83,11 @@ public class Item {
     public Date getRealDate()
     {
         return this.dueDate;
+    }
+    public void closeSwipe() {
+        //s.close(true);
+        s.setBackgroundColor(Color.parseColor("#000000"));
+        s.close(true, true);
     }
     public void setDueDate(Date dueDate)
     {
