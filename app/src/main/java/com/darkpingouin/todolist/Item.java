@@ -11,6 +11,7 @@ import java.util.Date;
 public class Item {
     private String title;
     private String text;
+    private boolean passed;
     private Date dueDate;
     private Status status;
     private String dateColor;
@@ -19,6 +20,7 @@ public class Item {
     {
         this.title = title;
         this.text = text;
+        this.passed = false;
         this.dueDate = dueDate;
         this.status = Status.TODO;
         this.dateColor = "#D3D3D3";
@@ -87,6 +89,14 @@ public class Item {
         return (this.status);
     }
 
+    public boolean getPassed() {
+        return this.passed;
+    }
+
+    public void setPassed(boolean b)
+    {
+        this.passed = b;
+    }
     public void setStatus(Status status)
     {
         this.status = status;

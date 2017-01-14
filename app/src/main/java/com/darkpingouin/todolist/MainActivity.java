@@ -4,10 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -29,12 +34,66 @@ public class MainActivity extends ActionBarActivity {
 
     ListView mListView;
     List<Item> items = new ArrayList<>();
+    List<Item> tmp = new ArrayList<>();
+
+    TextView nb_tasks;
+    boolean aff_done, aff_todo, aff_passed, aff_ondate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mListView = (ListView) findViewById(R.id.listView);
+        nb_tasks = (TextView) findViewById(R.id.nb_tasks);
+        aff_done = true;
+        aff_todo = true;
+        aff_passed = true;
+        aff_ondate = true;
+        Switch switchTodo = (Switch) findViewById(R.id.switch_todo);
+        switchTodo.setChecked(true);
+        switchTodo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    aff_todo = true;
+                else
+                    aff_todo = false;
+                affListCorresponding();
+            }
+        });
+        Switch switchDone = (Switch) findViewById(R.id.switch_done);
+
+        switchDone.setChecked(true);
+        switchDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    aff_done = true;
+                else
+                    aff_done = false;
+                affListCorresponding();
+            }
+        });
+        Switch switchPassed = (Switch) findViewById(R.id.switch_passed);
+        switchPassed.setChecked(true);
+        switchPassed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    aff_passed = true;
+                else
+                    aff_passed = false;
+                affListCorresponding();
+            }
+        });
+        Switch switchOnDate = (Switch) findViewById(R.id.switch_ondate);
+        switchOnDate.setChecked(true);
+        switchOnDate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    aff_ondate = true;
+                else
+                    aff_ondate = false;
+                affListCorresponding();
+            }
+        });
         try {
             getData();
         } catch (ParseException e) {
@@ -44,6 +103,7 @@ public class MainActivity extends ActionBarActivity {
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         }
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -83,18 +143,15 @@ public class MainActivity extends ActionBarActivity {
             if (eventType == XmlPullParser.TEXT) {
                 if (f == 0)
                     title = xpp.getText();
-                else if (f == 1)
-                {
+                else if (f == 1) {
                     String d = xpp.getText();
                     SimpleDateFormat newDateFormat = new SimpleDateFormat("EE d MMM yyyyHH:mm");
                     date = newDateFormat.parse(d);
-                }
-                else if (f == 3)
+                } else if (f == 3)
                     txt = xpp.getText();
                 f++;
             }
-            if (f == 4)
-            {
+            if (f == 4) {
                 tmp = new Item(title, txt, date);
                 list.add(tmp);
                 f = 0;
@@ -137,11 +194,11 @@ public class MainActivity extends ActionBarActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        ItemAdapter a = (ItemAdapter) mListView.getAdapter();
+        //ItemAdapter a = (ItemAdapter) mListView.getAdapter();
         Item tmp;
 
-        for (int i = 0; i < a.getCount(); i++) {
-            tmp = a.getItem(i);
+        for (int i = 0; i < items.size(); i++) {
+            tmp = items.get(i);
             try {
                 fOut.write(("<t>").getBytes());
             } catch (IOException e) {
@@ -222,6 +279,11 @@ public class MainActivity extends ActionBarActivity {
         return cal.getTime();
     }
 
+    public void settings(View V) {
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.openDrawer(Gravity.LEFT);
+    }
+
     public void add(View v) {
         Intent intentMain = new Intent(MainActivity.this, AddItem.class);
         startActivityForResult(intentMain, 1);
@@ -265,42 +327,71 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    public void checkDate()
-    {
+    public void checkDate() {
         int i = 0;
         Date d;
 
         d = new Date();
-        ItemAdapter a = (ItemAdapter)mListView.getAdapter();
-        while (i < a.getCount())
-        {
-            if (!(a.getItem(i).getRealDate().after(d)))
-            {
-                a.getItem(i).setDateColor("#FF0000");
+        nb_tasks.setText(String.valueOf(items.size()) + " Tasks");
+        while (i < items.size()) {
+            if (!(items.get(i).getRealDate().after(d))) {
+                items.get(i).setPassed(true);
+                items.get(i).setDateColor("#FF0000");
+            } else {
+                items.get(i).setPassed(false);
+                items.get(i).setDateColor("#DFDFDF");
             }
             i++;
         }
     }
 
     public void addToList(Item item) throws ParseException {
-        ItemAdapter a = (ItemAdapter) mListView.getAdapter();
-        a.add(item);
-        a.notifyDataSetChanged();
+        items.add(item);
         checkDate();
         saveData();
+        affListCorresponding();
     }
 
     public void modifyItem(int position, String title, String txt, Date d, String delete) throws ParseException {
-        ItemAdapter a = (ItemAdapter) mListView.getAdapter();
-        Item item = (Item) mListView.getAdapter().getItem(position);
+        Item item = items.get(position);
         if (delete.equals("false")) {
             item.setTitle(title);
             item.setText(txt);
             item.setDueDate(d);
         } else
-            a.remove(item);
+            items.remove(item);
         checkDate();
-        a.notifyDataSetChanged();
         saveData();
+        affListCorresponding();
+    }
+
+    public void affListCorresponding() {
+        int nb_items = items.size();
+        boolean t, d, p;
+        int i = 0;
+        tmp.clear();
+        while (i < nb_items) {
+            t = false;
+            p = false;
+            if (aff_done && items.get(i).getStatus() == Item.Status.DONE)
+                t = true;
+            if (aff_todo && items.get(i).getStatus() == Item.Status.TODO)
+                t = true;
+            if ((aff_passed && items.get(i).getPassed()))
+                p = true;
+            if ((aff_ondate && !items.get(i).getPassed()))
+                p = true;
+            if (t && p)
+                tmp.add(items.get(i));
+            i++;
+        }
+        ItemAdapter adapter = new ItemAdapter(MainActivity.this, tmp);
+        mListView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void refresh(View v)
+    {
+        affListCorresponding();
     }
 }
