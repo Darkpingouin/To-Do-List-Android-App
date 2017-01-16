@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,67 +25,58 @@ public class ItemAdapter extends ArrayAdapter<Item> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_item,parent, false);
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_item, parent, false);
         }
-        //final SwipeLayout s = (SwipeLayout)convertView.findViewById(R.id.swipe);
-        //View v = (View) parent.getParent().getParent();
-        //final TextView t = (TextView) v.findViewById(R.id.nb_tasks);
         ItemViewHolder viewHolder = (ItemViewHolder) convertView.getTag();
-        if(viewHolder == null){
+        if (viewHolder == null) {
             viewHolder = new ItemViewHolder();
             viewHolder.title = (TextView) convertView.findViewById(R.id.title);
             viewHolder.text = (TextView) convertView.findViewById(R.id.text);
-            viewHolder.date = (TextView) convertView.findViewById(R.id.date);
+            viewHolder.dateHour = (TextView) convertView.findViewById(R.id.dateHour);
+            viewHolder.dateMonth = (TextView) convertView.findViewById(R.id.dateMonth);
+            viewHolder.dateYear = (TextView) convertView.findViewById(R.id.dateYear);
+            viewHolder.categorie = (TextView) convertView.findViewById(R.id.categorie);
             convertView.setTag(viewHolder);
         }
-
         Item Item = getItem(position);
-        /*
-        viewHolder.doneB.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Item.setStatus(com.darkpingouin.todolist.Item.Status.DONE);
-                //s.close(true);
-                t.performClick();
-            }
-        });
-
-        viewHolder.todoB.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Item.setStatus(com.darkpingouin.todolist.Item.Status.TODO);
-                //s.close(true);
-                t.performClick();
-            }
-        });*/
+        final ArrayList<Categorie> cat = MainActivity.getCat();
+        int i = 0;
+        while (i < cat.size()) {
+            if (Item.getCategorie().equals(cat.get(i).getName()))
+                viewHolder.categorie.setBackgroundColor(cat.get(i).getColor());
+            i++;
+        }
         viewHolder.title.setText(Item.getTitle());
         if (Item.getStatus() == com.darkpingouin.todolist.Item.Status.DONE)
             viewHolder.text.getPaint().setStrikeThruText(true);
         else
             viewHolder.text.getPaint().setStrikeThruText(false);
-        viewHolder.date.setTextColor(Color.parseColor(Item.getDateColor()));
+        viewHolder.dateHour.setTextColor(Color.parseColor(Item.getDateColor()));
+        viewHolder.dateMonth.setTextColor(Color.parseColor(Item.getDateColor()));
+        viewHolder.dateYear.setTextColor(Color.parseColor(Item.getDateColor()));
         viewHolder.text.setText(Item.getText());
-        viewHolder.date.setText(Item.getDueDate());
+        viewHolder.dateMonth.setText(Item.getMonth());
+        viewHolder.dateYear.setText(Item.getYear());
+        viewHolder.dateHour.setText(Item.getTime());
 
         return convertView;
     }
 
-    private class ItemViewHolder{
+    private class ItemViewHolder {
         public TextView title;
         public TextView text;
-        public TextView date;
+        public TextView dateHour;
+        public TextView dateYear;
+        public TextView dateMonth;
+        public TextView categorie;
     }
 
     public View getViewByPosition(int pos, ListView listView) {
         final int firstListItemPosition = listView.getFirstVisiblePosition();
         final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
 
-        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+        if (pos < firstListItemPosition || pos > lastListItemPosition) {
             return listView.getAdapter().getView(pos, null, listView);
         } else {
             final int childIndex = pos - firstListItemPosition;

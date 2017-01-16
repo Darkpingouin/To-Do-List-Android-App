@@ -1,9 +1,5 @@
 package com.darkpingouin.todolist;
 
-import android.graphics.Color;
-
-import com.daimajia.swipe.SwipeLayout;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,7 +15,7 @@ public class Item {
     private Date dueDate;
     private Status status;
     private String dateColor;
-    public SwipeLayout s;
+    private String categorie;
     public enum Status {TODO, DONE}
     public Item(String title, String text, Date dueDate)
     {
@@ -28,7 +24,8 @@ public class Item {
         this.passed = false;
         this.dueDate = dueDate;
         this.status = Status.TODO;
-        this.dateColor = "#D3D3D3";
+        this.dateColor = "#AFAFAF";
+        this.categorie = "none";
     }
 
     public void setDateColor(String c)
@@ -80,15 +77,25 @@ public class Item {
         return MySDate;
     }
 
+    public String getMonth()
+    {
+        SimpleDateFormat newDateFormat = new SimpleDateFormat("dd/MM");
+        String MySDate = newDateFormat.format(this.dueDate);
+        return MySDate;
+    }
+
+    public String getYear()
+    {
+        SimpleDateFormat newDateFormat = new SimpleDateFormat("yyyy");
+        String MySDate = newDateFormat.format(this.dueDate);
+        return MySDate;
+    }
+
     public Date getRealDate()
     {
         return this.dueDate;
     }
-    public void closeSwipe() {
-        //s.close(true);
-        s.setBackgroundColor(Color.parseColor("#000000"));
-        s.close(true, true);
-    }
+
     public void setDueDate(Date dueDate)
     {
         this.dueDate = dueDate;
@@ -110,5 +117,13 @@ public class Item {
     public void setStatus(Status status)
     {
         this.status = status;
+    }
+    public void setCategorie(String cat)
+    {
+        this.categorie = cat;
+    }
+    public String getCategorie()
+    {
+        return this.categorie;
     }
 }

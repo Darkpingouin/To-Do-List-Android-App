@@ -6,6 +6,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +14,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -38,9 +40,12 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity {
 
+    int id;
     ListView mListView;
     List<Item> items = new ArrayList<>();
     List<Item> tmp = new ArrayList<>();
+    public static ArrayList<Categorie> cat = new ArrayList<>();
+
 
     TextView nb_tasks;
     boolean aff_done, aff_todo, aff_passed, aff_ondate;
@@ -55,6 +60,11 @@ public class MainActivity extends ActionBarActivity {
         aff_todo = true;
         aff_passed = true;
         aff_ondate = true;
+        id = 0;
+        /*cat.add(new Categorie("none", Color.parseColor("#DFDFDF")));
+        cat.add(new Categorie("Travail", Color.parseColor("#FFEEAA")));
+        cat.add(new Categorie("Urgent", Color.parseColor("#DD5588")));
+        saveCategory();*/
         Switch switchTodo = (Switch) findViewById(R.id.switch_todo);
         switchTodo.setChecked(true);
         switchTodo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -109,7 +119,17 @@ public class MainActivity extends ActionBarActivity {
         } catch (XmlPullParserException e) {
             e.printStackTrace();
         }
-
+        try {
+            getCatData();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        }
+        if (cat.size() == 0)
+            cat.add(new Categorie("none", Color.parseColor("#DFDFDF")));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -119,11 +139,13 @@ public class MainActivity extends ActionBarActivity {
                 String time = item.getTime();
                 String txt = item.getText();
                 String date = item.getDate();
+                String categorie = item.getCategorie();
                 intentMain.putExtra("position", String.valueOf(position));
                 intentMain.putExtra("title", title);
                 intentMain.putExtra("txt", txt);
                 intentMain.putExtra("date", date);
                 intentMain.putExtra("time", time);
+                intentMain.putExtra("categorie", categorie);
                 startActivityForResult(intentMain, 1);
             }
         });
@@ -137,6 +159,8 @@ public class MainActivity extends ActionBarActivity {
         Item tmp;
         String title = "";
         String txt = "";
+        String status = "";
+        String cat = "";
         Date date = new Date();
         int f = 0;
 
@@ -153,12 +177,55 @@ public class MainActivity extends ActionBarActivity {
                     String d = xpp.getText();
                     SimpleDateFormat newDateFormat = new SimpleDateFormat("EE d MMM yyyyHH:mm");
                     date = newDateFormat.parse(d);
-                } else if (f == 3)
+                }
+                else if (f == 2)
+                    status = xpp.getText();
+                else if (f == 3)
                     txt = xpp.getText();
+                else if (f == 4)
+                    cat = xpp.getText();
                 f++;
             }
-            if (f == 4) {
+            if (f == 5) {
                 tmp = new Item(title, txt, date);
+                if (status.equals(Item.Status.DONE.toString()))
+                    tmp.setStatus(Item.Status.DONE);
+                else
+                    tmp.setStatus(Item.Status.TODO);
+                tmp.setCategorie(cat);
+                System.out.println("ITEM : " + title + " " + txt + " " + date + " " + status);
+                list.add(tmp);
+                f = 0;
+            }
+            eventType = xpp.next();
+        }
+        return list;
+    }
+
+    public ArrayList<Categorie> dataToCat(String data) throws ParseException, XmlPullParserException, IOException {
+        ArrayList<Categorie> list = new ArrayList<Categorie>();
+        Categorie tmp;
+        String name = "";
+        int color = 0;
+        int f = 0;
+
+        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+        factory.setNamespaceAware(true);
+        XmlPullParser xpp = factory.newPullParser();
+        xpp.setInput(new StringReader(data));
+        int eventType = xpp.getEventType();
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            if (eventType == XmlPullParser.TEXT) {
+                if (f == 0)
+                    name = xpp.getText();
+                else if (f == 1) {
+                    color = Integer.parseInt(xpp.getText());
+                }
+                f++;
+            }
+            if (f == 2) {
+                tmp = new Categorie(name, color);
+                System.out.println("CAT : " + name + " " + color);
                 list.add(tmp);
                 f = 0;
             }
@@ -191,6 +258,32 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
         items = dataToItems(temp);
+    }
+
+    public void getCatData() throws ParseException, IOException, XmlPullParserException {
+        int c;
+        String temp = "";
+        FileInputStream fin = null;
+        try {
+            fin = openFileInput("categorySave");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            while ((c = fin.read()) != -1) {
+                temp = temp + Character.toString((char) c);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(temp);
+        try {
+            fin.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        cat = dataToCat(temp);
     }
 
     public void saveData() {
@@ -242,6 +335,7 @@ public class MainActivity extends ActionBarActivity {
             }
             try {
                 fOut.write((tmp.getStatus().toString()).getBytes());
+                System.out.println("SAVING HERE " + tmp.getStatus().toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -262,6 +356,69 @@ public class MainActivity extends ActionBarActivity {
             }
             try {
                 fOut.write(("</x>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(("<c>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write((tmp.getCategorie()).getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(("</c>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            fOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void saveCategory() {
+        FileOutputStream fOut = null;
+        try {
+            fOut = openFileOutput("categorySave", Context.MODE_PRIVATE);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Categorie tmp;
+
+        for (int i = 0; i < cat.size(); i++) {
+            tmp = cat.get(i);
+            try {
+                fOut.write(("<n>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(tmp.getName().getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(("</n>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(("<c>").getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(String.valueOf(tmp.getColor()).getBytes());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.write(("</c>").getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -304,6 +461,7 @@ public class MainActivity extends ActionBarActivity {
                 String txt = data.getStringExtra("txt");
                 String date = data.getStringExtra("date");
                 String delete = data.getStringExtra("delete");
+                String category = data.getStringExtra("categorie");
                 SimpleDateFormat newDateFormat = new SimpleDateFormat("EE d MMM yyyy k:m");
                 Date d = null;
                 try {
@@ -314,18 +472,30 @@ public class MainActivity extends ActionBarActivity {
                 if (data.getStringExtra("edit").equals("true")) {
                     int position = Integer.parseInt(data.getStringExtra("position"));
                     try {
-                        modifyItem(position, title, txt, d, delete);
+                        modifyItem(position, title, txt, d, delete, category);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                 } else {
                     Item newItem = new Item(title, txt, d);
+                    newItem.setCategorie(category);
                     try {
                         addToList(newItem);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                 }
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //here goes nothing
+            }
+        }
+        if (requestCode == 2) {
+            if (resultCode == Activity.RESULT_OK) {
+                String name = data.getStringExtra("name");
+                String sColor = data.getStringExtra("color");
+                int color = Integer.parseInt(sColor);
+                cat.add(new Categorie(name, color));
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //here goes nothing
@@ -345,7 +515,7 @@ public class MainActivity extends ActionBarActivity {
                 items.get(i).setDateColor("#FF0000");
             } else {
                 items.get(i).setPassed(false);
-                items.get(i).setDateColor("#DFDFDF");
+                items.get(i).setDateColor("#121212");
             }
             i++;
         }
@@ -355,19 +525,28 @@ public class MainActivity extends ActionBarActivity {
         items.add(item);
         checkDate();
         saveData();
+        Date f = new Date();
+        int delay = (int) (item.getRealDate().getTime() - f.getTime());
+        if (delay > 0)
+            scheduleNotification(getNotification(item.getTitle()), delay);
         affListCorresponding();
     }
 
-    public void modifyItem(int position, String title, String txt, Date d, String delete) throws ParseException {
+    public void modifyItem(int position, String title, String txt, Date d, String delete, String cat) throws ParseException {
         Item item = items.get(position);
         if (delete.equals("false")) {
             item.setTitle(title);
             item.setText(txt);
             item.setDueDate(d);
+            item.setCategorie(cat);
         } else
             items.remove(item);
         checkDate();
         saveData();
+        Date f = new Date();
+        int delay = (int) (d.getTime() - f.getTime());
+        if (delay > 0)
+            scheduleNotification(getNotification(title), delay);
         affListCorresponding();
     }
 
@@ -402,9 +581,11 @@ public class MainActivity extends ActionBarActivity {
         SwipeLayout s = (SwipeLayout) mListView.getChildAt(position);
         Item a = items.get(position);
         a.setStatus(Item.Status.TODO);
+        /*ItemAdapter b = (ItemAdapter) mListView.getAdapter();
+        b.notifyDataSetChanged();*/
+        affListCorresponding();
+        saveData();
         s.close(true);
-        ItemAdapter b = (ItemAdapter) mListView.getAdapter();
-        b.notifyDataSetChanged();
     }
 
     public void doneClick(View v) {
@@ -414,14 +595,17 @@ public class MainActivity extends ActionBarActivity {
         a.setStatus(Item.Status.DONE);
         s.close(true);
         ItemAdapter b = (ItemAdapter) mListView.getAdapter();
+        affListCorresponding();
         b.notifyDataSetChanged();
-        scheduleNotification(getNotification("5 second delay"), 5000);
+        saveData();
     }
 
     private void scheduleNotification(Notification notification, int delay) {
 
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        //notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, id);
+        id++;
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -432,11 +616,30 @@ public class MainActivity extends ActionBarActivity {
 
     private Notification getNotification(String content) {
         Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("Scheduled Notification");
+        builder.setContentTitle("To Do");
         builder.setContentText(content);
         builder.setSmallIcon(R.drawable.ic_menu_camera);
+        affListCorresponding();
         return builder.build();
     }
+    public static ArrayList<Categorie> getCatA()
+    {
+        ArrayList<Categorie> tmp = new ArrayList<Categorie>();
+        int i = 0;
+        while (i < cat.size())
+            tmp.add(cat.get(i++));
+        return tmp;
+    }
 
+    public static ArrayList<Categorie> getCat()
+    {
+        return (getCatA());
+    }
 
+    public void addCategorie(View v)
+    {
+        Intent intentMain = new Intent(MainActivity.this, addCategory.class);
+        startActivityForResult(intentMain, 2);
+        saveCategory();
+    }
 }

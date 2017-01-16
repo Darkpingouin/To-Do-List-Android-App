@@ -8,19 +8,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class EditItem extends AppCompatActivity {
 
     int year, month, day, hour, minute;
     boolean editDate = false;
     boolean editTime = false;
+    Spinner spinner2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,10 +37,52 @@ public class EditItem extends AppCompatActivity {
         String txt = getIntent().getStringExtra("txt");
         String date = getIntent().getStringExtra("date");
         String time = getIntent().getStringExtra("time");
+        String categorie = getIntent().getStringExtra("categorie");
+        spinner2 = (Spinner) findViewById(R.id.spinner2);
+        addItemsOnSpinner2();
+        int i = 0;
+        int selection = 0;
+        while (i < MainActivity.getCat().size()) {
+            if (categorie.equals(MainActivity.getCat().get(i).getName())) {
+                ((RelativeLayout) findViewById(R.id.textBar)).setBackgroundColor(MainActivity.getCat().get(i).getColor());
+                ((RelativeLayout) findViewById(R.id.textBar1)).setBackgroundColor(MainActivity.getCat().get(i).getColor());
+                ((TextView) findViewById(R.id.title)).setBackgroundColor(MainActivity.getCat().get(i).getColor());
+                selection = i;
+            }
+            i++;
+        }
+        spinner2.setSelection(selection);
         ((TextView) findViewById(R.id.time2)).setText(time);
         ((TextView) findViewById(R.id.date2)).setText(date);
         ((TextView) findViewById(R.id.title)).setText(title);
         ((TextView) findViewById(R.id.txt)).setText(txt);
+    }
+
+    public void addItemsOnSpinner2() {
+        List<String> list = new ArrayList<String>();
+        int i = 0;
+        while (i < MainActivity.getCat().size()) {
+            list.add(MainActivity.getCat().get(i).getName());
+            i++;
+        }
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((RelativeLayout) findViewById(R.id.textBar)).setBackgroundColor(MainActivity.getCat().get(position).getColor());
+                ((RelativeLayout) findViewById(R.id.textBar1)).setBackgroundColor(MainActivity.getCat().get(position).getColor());
+                ((TextView) findViewById(R.id.title)).setBackgroundColor(MainActivity.getCat().get(position).getColor());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+        });
+        spinner2.setAdapter(dataAdapter);
     }
 
     public void setDate(View view) {
@@ -100,8 +150,8 @@ public class EditItem extends AppCompatActivity {
     private void showTime(int hour, int minute) {
         ((TextView) findViewById(R.id.time2)).setText(String.format("%02d", hour) + ":" + String.format("%02d", minute));
     }
-    public void edit(View v)
-    {
+
+    public void edit(View v) {
         TextView textView = (TextView) findViewById(R.id.txt);
         textView.setFocusable(true);
         textView.setFocusableInTouchMode(true);
@@ -114,42 +164,43 @@ public class EditItem extends AppCompatActivity {
         save.setVisibility(View.VISIBLE);
     }
 
-    public void delete(View v)
-    {
+    public void delete(View v) {
         String title = ((TextView) findViewById(R.id.title)).getText().toString();
         String txt = ((TextView) findViewById(R.id.txt)).getText().toString();
         String d = ((TextView) findViewById(R.id.date2)).getText().toString() + " " + ((TextView) findViewById(R.id.time2)).getText().toString();
+        String categorie = ((TextView) findViewById(R.id.categorie)).getText().toString();
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("title",title);
+        returnIntent.putExtra("title", title);
         returnIntent.putExtra("txt", txt);
         returnIntent.putExtra("date", d);
         returnIntent.putExtra("edit", "true");
         returnIntent.putExtra("position", getIntent().getStringExtra("position"));
+        returnIntent.putExtra("categorie", categorie);
         returnIntent.putExtra("delete", "true");
-        setResult(Activity.RESULT_OK,returnIntent);
+        setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
-    public void save(View v)
-    {
+    public void save(View v) {
         String title = ((TextView) findViewById(R.id.title)).getText().toString();
         String txt = ((TextView) findViewById(R.id.txt)).getText().toString().replace('<', ' ');
         String d = ((TextView) findViewById(R.id.date2)).getText().toString() + " " + ((TextView) findViewById(R.id.time2)).getText().toString();
+        String categorie = String.valueOf(spinner2.getSelectedItem());
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("title",title);
+        returnIntent.putExtra("title", title);
         returnIntent.putExtra("txt", txt);
         returnIntent.putExtra("date", d);
         returnIntent.putExtra("edit", "true");
         returnIntent.putExtra("position", getIntent().getStringExtra("position"));
+        returnIntent.putExtra("categorie", categorie);
         returnIntent.putExtra("delete", "false");
-        setResult(Activity.RESULT_OK,returnIntent);
+        setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
-    public void cancel(View v)
-    {
+    public void cancel(View v) {
         Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_CANCELED,returnIntent);
+        setResult(Activity.RESULT_CANCELED, returnIntent);
         finish();
     }
 }

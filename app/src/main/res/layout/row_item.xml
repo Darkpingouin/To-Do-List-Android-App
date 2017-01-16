@@ -13,62 +13,103 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:onClick="doneClick"
             android:id="@+id/doneB"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
+            android:onClick="doneClick"
             android:src="@drawable/done" />
 
         <ImageView
             android:id="@+id/todoB"
-            android:onClick="todoClick"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
+            android:onClick="todoClick"
             android:src="@drawable/cancel" />
         <!--What you want to show-->
     </LinearLayout>
     <!-- Bottom View End-->
 
     <!-- Surface View Start -->
-    <RelativeLayout
-        android:id="@+id/showItem"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
+        android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/checkbox"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/checkbox"
-            android:textColor="@android:color/black"
-            android:textStyle="bold"
-            tools:text="Title" />
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/title"
-            android:layout_below="@+id/title"
-            android:maxHeight="40dp"
-            android:textColor="@android:color/black"
-            tools:text="To do..." />
-
-        <TextView
-            android:id="@+id/date"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:textColor="@android:color/darker_gray"
-            android:textStyle="italic"
-            tools:text="due to 25/11" />
-    </RelativeLayout>
+            android:id="@+id/categorie"
+            android:layout_height="match_parent"
+            android:layout_weight="22"
+            android:background="#456345" />
+
+        <RelativeLayout
+            android:id="@+id/showItem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:id="@+id/dateView"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/dateHour"
+                    android:layout_width="wrap_content"
+                    android:text="16:30"
+                    android:textSize="17dp"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/dateMonth"
+                    android:text="21/03"
+                    android:textSize="15dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/dateYear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2017"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/dateView"
+                android:layout_marginLeft="10dp"
+                android:textSize="20dp"
+                android:layout_toRightOf="@+id/dateView"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                tools:text="Title" />
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/title"
+                android:layout_below="@+id/title"
+                android:maxHeight="40dp"
+                android:textColor="@android:color/black"
+                tools:text="To do..." />
+
+            <TextView
+                android:id="@+id/date"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textColor="@android:color/darker_gray"
+                android:textStyle="italic"
+                tools:text="due to 25/11" />
+        </RelativeLayout>
+    </LinearLayout>
     <!-- Surface View End -->
 </com.daimajia.swipe.SwipeLayout>

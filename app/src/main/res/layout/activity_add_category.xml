@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_add_category"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.darkpingouin.todolist.addCategory">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="42dp"
+            android:id="@+id/color"
+            android:background="#455455"
+            android:onClick="setColor"
+            android:layout_height="42dp"
+            android:padding="10dp">
+        </View>
+        <EditText
+            android:id="@+id/catName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:textSize="40dp"
+        android:onClick="added"/>
+</LinearLayout>

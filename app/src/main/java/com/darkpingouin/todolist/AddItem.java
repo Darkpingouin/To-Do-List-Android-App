@@ -129,6 +129,7 @@ public class AddItem extends AppCompatActivity {
         returnIntent.putExtra("title",title);
         returnIntent.putExtra("txt", txt);
         returnIntent.putExtra("date", d);
+        returnIntent.putExtra("categorie", "none");
         returnIntent.putExtra("edit", "false");
         setResult(Activity.RESULT_OK,returnIntent);
         finish();
