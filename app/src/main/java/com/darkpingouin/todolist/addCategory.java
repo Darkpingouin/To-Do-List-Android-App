@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
 
@@ -41,13 +42,24 @@ public class addCategory extends AppCompatActivity {
 
     public void added(View v)
     {
+        int i =0;
+        boolean ok = true;
         String name;
-
         name = ((TextView) findViewById(R.id.catName)).getText().toString();
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("name", name);
-        returnIntent.putExtra("color", String.valueOf(finalColor));
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
+        while (i < MainActivity.getCat().size())
+        {
+            if (name.equals(MainActivity.getCat().get(i).getName()))
+                ok = false;
+            i++;
+        }
+        if (ok) {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("name", name);
+            returnIntent.putExtra("color", String.valueOf(finalColor));
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
+        }
+        else
+            Toast.makeText(this.getApplicationContext(), "Error: Category " + name + " already exists", Toast.LENGTH_SHORT);
     }
 }
