@@ -42,20 +42,21 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity {
 
     int id;
-    ListView mListView;
-    List<Item> items = new ArrayList<>();
-    List<Item> tmp = new ArrayList<>();
+    public static ListView mListView, checkListView;
+    public static List<Item> items = new ArrayList<>();
+    public static List<Item> tmp = new ArrayList<>();
     public static ArrayList<Categorie> cat = new ArrayList<>();
 
 
     TextView nb_tasks;
-    boolean aff_done, aff_todo, aff_passed, aff_ondate;
+    public static boolean aff_done, aff_todo, aff_passed, aff_ondate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mListView = (ListView) findViewById(R.id.listView);
+        checkListView = (ListView) findViewById(R.id.checkCat);
         nb_tasks = (TextView) findViewById(R.id.nb_tasks);
         aff_done = true;
         aff_todo = true;
@@ -207,7 +208,26 @@ public class MainActivity extends ActionBarActivity {
                 startActivityForResult(intentMain, 1);
             }
         });
+        checkListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                System.out.println("MDRRRR SELECTED");
+                saveCategory();
+                affListCorresponding();
+                ((checkAdapter) checkListView.getAdapter()).notifyDataSetChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                System.out.println("MDRRRR NOTHING SELECTED");
+                saveCategory();
+                affListCorresponding();
+                ((checkAdapter) checkListView.getAdapter()).notifyDataSetChanged();
+            }
+        });
         ItemAdapter adapter = new ItemAdapter(MainActivity.this, items);
+        checkAdapter adapter1 = new checkAdapter(MainActivity.this, cat);
+        checkListView.setAdapter(adapter1);
         mListView.setAdapter(adapter);
         checkDate();
     }
@@ -554,13 +574,18 @@ public class MainActivity extends ActionBarActivity {
         }
         if (requestCode == 2) {
             if (resultCode == Activity.RESULT_OK) {
-                String name = data.getStringExtra("name");
+                /*String name = data.getStringExtra("name");
                 String sColor = data.getStringExtra("color");
                 int color = Integer.parseInt(sColor);
-                cat.add(new Categorie(name, color));
+                cat.add(new Categorie(name, color));*/
                 saveCategory();
+                affListCorresponding();
+                ((checkAdapter) checkListView.getAdapter()).notifyDataSetChanged();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
+                saveCategory();
+                affListCorresponding();
+                ((checkAdapter) checkListView.getAdapter()).notifyDataSetChanged();
                 //here goes nothing
             }
         }
@@ -613,6 +638,22 @@ public class MainActivity extends ActionBarActivity {
         affListCorresponding();
     }
 
+    public void changeCats()
+    {
+        affListCorresponding();
+    }
+
+    public boolean showCatForItem(Item item)
+    {
+        int i = 0;
+        while (i < cat.size()) {
+            if (cat.get(i).getName().equals(item.getCategorie())) {
+                return cat.get(i).getShow();
+            }
+            i++;
+        }
+        return false;
+    }
     public void affListCorresponding() {
         int nb_items = items.size();
         boolean t, p;
@@ -629,7 +670,7 @@ public class MainActivity extends ActionBarActivity {
                 p = true;
             if ((aff_ondate && !items.get(i).getPassed()))
                 p = true;
-            if (t && p)
+            if (t && p && showCatForItem(items.get(i)))
                 tmp.add(items.get(i));
             i++;
         }
@@ -696,6 +737,11 @@ public class MainActivity extends ActionBarActivity {
         return tmp;
     }
 
+    public void closeMenu(View v)
+    {
+        DrawerLayout d = ((DrawerLayout) findViewById(R.id.drawer_layout));
+        d.closeDrawers();
+    }
     public static ArrayList<Categorie> getCat()
     {
         return (getCatA());
@@ -705,5 +751,7 @@ public class MainActivity extends ActionBarActivity {
     {
         Intent intentMain = new Intent(MainActivity.this, addCategory.class);
         startActivityForResult(intentMain, 2);
+        //startActivity(intentMain);
+        System.out.println("MDRRRRRR");
     }
 }

@@ -16,12 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/colorPrimary">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/plus"
-                android:onClick="addCategorie"/>
-
             <TextView
                 android:id="@+id/nb_tasks"
                 android:layout_width="match_parent"
@@ -34,12 +28,13 @@
                 android:textStyle="bold" />
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:paddingLeft="10dp"
                 android:layout_centerVertical="true"
                 android:onClick="settings"
-                android:src="@drawable/params" />
+                android:src="@drawable/menu"
+                android:contentDescription="menu_list" />
 
         </RelativeLayout>
 
@@ -53,7 +48,7 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@+id/relativeLayout" />
+                android:layout_below="@+id/top" />
             <ImageView
                 android:id="@+id/add_btn"
                 android:layout_width="80dp"
@@ -74,12 +69,11 @@
         android:layout_gravity="start|left"
         android:orientation="vertical" >
         <RelativeLayout
-            android:id="@+id/top"
+            android:id="@+id/top2"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/colorPrimary">
             <TextView
-                android:id="@+id/nb_tasks"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -88,6 +82,14 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18dp"
                 android:textStyle="bold" />
+            <ImageView
+                android:layout_width="40dp"
+                android:padding="10dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:onClick="closeMenu"
+                android:layout_height="40dp"
+                android:src="@drawable/close"/>
         </RelativeLayout>
         <LinearLayout
             android:orientation="horizontal"
@@ -126,5 +128,15 @@
             android:id="@+id/switch_ondate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <ListView
+            android:id="@+id/checkCat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="addCategorie"
+            android:text="+ Add category"/>
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
