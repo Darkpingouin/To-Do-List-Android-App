@@ -1,25 +1,31 @@
 package com.darkpingouin.todolist;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
 
 public class addCategory extends AppCompatActivity {
 
     int finalColor;
+    ListView mListView;
+    public static ArrayList<Categorie> cat2 = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_category);
         finalColor = Color.parseColor("#DFDFDF");
+        mListView = (ListView) findViewById(R.id.listView);
+        cat2 = MainActivity.getCat();
+        CatAdapter adapter = new CatAdapter(addCategory.this, cat2);
+        mListView.setAdapter(adapter);
     }
 
     public void setColor(View v) {
@@ -40,7 +46,7 @@ public class addCategory extends AppCompatActivity {
         });
     }
 
-    public void added(View v)
+   /* public void added(View v)
     {
         int i =0;
         boolean ok = true;
@@ -59,7 +65,9 @@ public class addCategory extends AppCompatActivity {
             setResult(Activity.RESULT_OK, returnIntent);
             finish();
         }
-        else
-            Toast.makeText(this.getApplicationContext(), "Error: Category " + name + " already exists", Toast.LENGTH_SHORT);
-    }
+        else {
+            Toast.makeText(this.getApplicationContext(), "Error: Category " + name + " already exists", Toast.LENGTH_SHORT).show();
+        }
+
+    }*/
 }

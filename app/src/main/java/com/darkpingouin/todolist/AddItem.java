@@ -8,20 +8,27 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static com.darkpingouin.todolist.R.id.date;
 
 public class AddItem extends AppCompatActivity {
     private DatePicker datePicker;
     private Calendar calendar;
+    public Spinner spinner2;
     private TextView dateView, timeView;
     private int year, month, day, hour, minute;
 
@@ -44,8 +51,34 @@ public class AddItem extends AppCompatActivity {
             e.printStackTrace();
         }
         showTime(hour, minute);
+        spinner2 = (Spinner) findViewById(R.id.spinner2);
+        addItemsOnSpinner2();
     }
+    public void addItemsOnSpinner2() {
+        List<String> list = new ArrayList<String>();
+        int i = 0;
+        while (i < MainActivity.getCat().size()) {
+            list.add(MainActivity.getCat().get(i).getName());
+            i++;
+        }
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((RelativeLayout) findViewById(R.id.textBar)).setBackgroundColor(MainActivity.getCat().get(position).getColor());
+                ((TextView) findViewById(R.id.title)).setBackgroundColor(MainActivity.getCat().get(position).getColor());
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+        });
+        spinner2.setAdapter(dataAdapter);
+    }
 
     @SuppressWarnings("deprecation")
     public void setDate(View view) {
@@ -125,11 +158,12 @@ public class AddItem extends AppCompatActivity {
         String title = ((TextView) findViewById(R.id.title)).getText().toString();
         String txt = ((TextView) findViewById(R.id.txt)).getText().toString().replace('<', ' ');
         String d = ((TextView) findViewById(R.id.date)).getText().toString() + " " + ((TextView) findViewById(R.id.time)).getText().toString();
+        String categorie = String.valueOf(spinner2.getSelectedItem());
         Intent returnIntent = new Intent();
         returnIntent.putExtra("title",title);
         returnIntent.putExtra("txt", txt);
         returnIntent.putExtra("date", d);
-        returnIntent.putExtra("categorie", "none");
+        returnIntent.putExtra("categorie", categorie);
         returnIntent.putExtra("edit", "false");
         setResult(Activity.RESULT_OK,returnIntent);
         finish();

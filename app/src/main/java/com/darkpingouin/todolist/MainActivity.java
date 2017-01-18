@@ -7,14 +7,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.RequiresApi;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
@@ -77,6 +78,8 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         Switch switchDone = (Switch) findViewById(R.id.switch_done);
+        switchDone.setDrawingCacheBackgroundColor(Color.RED);
+
 
         switchDone.setChecked(true);
         switchDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -243,21 +246,23 @@ public class MainActivity extends ActionBarActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        try {
-            while ((c = fin.read()) != -1) {
-                temp = temp + Character.toString((char) c);
+        if (fin != null) {
+            try {
+                while ((c = fin.read()) != -1) {
+                    temp = temp + Character.toString((char) c);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        System.out.println(temp);
-        try {
-            fin.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(temp);
+            try {
+                fin.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            items = dataToItems(temp);
         }
-        items = dataToItems(temp);
     }
 
     public void getCatData() throws ParseException, IOException, XmlPullParserException {
@@ -269,21 +274,23 @@ public class MainActivity extends ActionBarActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        try {
-            while ((c = fin.read()) != -1) {
-                temp = temp + Character.toString((char) c);
+        if (fin != null) {
+            try {
+                while ((c = fin.read()) != -1) {
+                    temp = temp + Character.toString((char) c);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        System.out.println(temp);
-        try {
-            fin.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(temp);
+            try {
+                fin.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            cat = dataToCat(temp);
         }
-        cat = dataToCat(temp);
     }
 
     public void saveData() {
@@ -389,7 +396,7 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
         Categorie tmp;
-
+        System.out.println("SAVING CAT -------> " + cat.size());
         for (int i = 0; i < cat.size(); i++) {
             tmp = cat.get(i);
             try {
@@ -496,6 +503,7 @@ public class MainActivity extends ActionBarActivity {
                 String sColor = data.getStringExtra("color");
                 int color = Integer.parseInt(sColor);
                 cat.add(new Categorie(name, color));
+                saveCategory();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //here goes nothing
@@ -552,7 +560,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void affListCorresponding() {
         int nb_items = items.size();
-        boolean t, d, p;
+        boolean t, p;
         int i = 0;
         tmp.clear();
         while (i < nb_items) {
@@ -603,8 +611,8 @@ public class MainActivity extends ActionBarActivity {
     private void scheduleNotification(Notification notification, int delay) {
 
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
-        //notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, id);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
+        //notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, id);
         id++;
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -614,11 +622,13 @@ public class MainActivity extends ActionBarActivity {
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     private Notification getNotification(String content) {
         Notification.Builder builder = new Notification.Builder(this);
         builder.setContentTitle("To Do");
         builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.ic_menu_camera);
+        builder.setSmallIcon(R.drawable.ic_notif);
+        //builder.setColor(Color.parseColor("#102372"));
         affListCorresponding();
         return builder.build();
     }
@@ -640,6 +650,5 @@ public class MainActivity extends ActionBarActivity {
     {
         Intent intentMain = new Intent(MainActivity.this, addCategory.class);
         startActivityForResult(intentMain, 2);
-        saveCategory();
     }
 }
