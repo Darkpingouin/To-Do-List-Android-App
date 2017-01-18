@@ -12,11 +12,12 @@
         android:background="#FF4543"
         android:orientation="horizontal">
         <ImageView
+            android:contentDescription="delete"
             android:id="@+id/todoB"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="5dp"
-            android:onClick="todoClick"
+            android:onClick="delete"
             android:src="@drawable/delete" />
         <!--What you want to show-->
     </LinearLayout>

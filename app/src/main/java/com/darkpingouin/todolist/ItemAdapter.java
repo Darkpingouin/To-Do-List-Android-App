@@ -41,11 +41,19 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         }
         Item Item = getItem(position);
         final ArrayList<Categorie> cat = MainActivity.getCat();
-        int i = 0;
-        while (i < cat.size()) {
-            if (Item.getCategorie().equals(cat.get(i).getName()))
-                viewHolder.categorie.setBackgroundColor(cat.get(i).getColor());
-            i++;
+        if (cat.size() == 1)
+        {
+            if (!Item.getCategorie().equals("none"))
+                Item.setCategorie("none");
+            viewHolder.categorie.setBackgroundColor(cat.get(0).getColor());
+        }
+        else {
+            int i = 0;
+            while (i < cat.size()) {
+                if (Item.getCategorie().equals(cat.get(i).getName()))
+                    viewHolder.categorie.setBackgroundColor(cat.get(i).getColor());
+                i++;
+            }
         }
         viewHolder.title.setText(Item.getTitle());
         if (Item.getStatus() == com.darkpingouin.todolist.Item.Status.DONE)

@@ -168,14 +168,14 @@ public class EditItem extends AppCompatActivity {
         String title = ((TextView) findViewById(R.id.title)).getText().toString();
         String txt = ((TextView) findViewById(R.id.txt)).getText().toString();
         String d = ((TextView) findViewById(R.id.date2)).getText().toString() + " " + ((TextView) findViewById(R.id.time2)).getText().toString();
-        String categorie = ((TextView) findViewById(R.id.categorie)).getText().toString();
+        //String categorie = ((TextView) findViewById(R.id.categorie)).getText().toString();
         Intent returnIntent = new Intent();
         returnIntent.putExtra("title", title);
         returnIntent.putExtra("txt", txt);
         returnIntent.putExtra("date", d);
         returnIntent.putExtra("edit", "true");
         returnIntent.putExtra("position", getIntent().getStringExtra("position"));
-        returnIntent.putExtra("categorie", categorie);
+        returnIntent.putExtra("categorie", "null");
         returnIntent.putExtra("delete", "true");
         setResult(Activity.RESULT_OK, returnIntent);
         finish();

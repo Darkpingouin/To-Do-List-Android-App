@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.daimajia.swipe.SwipeLayout;
 
 import java.util.ArrayList;
 
@@ -44,6 +47,22 @@ public class addCategory extends AppCompatActivity {
                 System.out.println("CANCEL");
             }
         });
+    }
+
+
+    public void delete(View v)
+    {
+        final int position = mListView.getPositionForView((View) v.getParent());
+        if (!MainActivity.cat.get(position).getName().equals("none")) {
+            MainActivity.cat.remove(position);
+            cat2.remove(position);
+            CatAdapter a = (CatAdapter) mListView.getAdapter();
+            a.notifyDataSetChanged();
+        }
+        else
+            Toast.makeText(getApplicationContext(), "Error can't delete \"none\" category", Toast.LENGTH_SHORT).show();
+        SwipeLayout s = (SwipeLayout) mListView.getChildAt(position);
+        s.close(true);
     }
 
    /* public void added(View v)
