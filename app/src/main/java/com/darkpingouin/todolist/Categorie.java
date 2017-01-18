@@ -7,11 +7,13 @@ package com.darkpingouin.todolist;
 public class Categorie {
     private String name;
     private int color;
+    private boolean show;
 
     public Categorie(String n, int c)
     {
         this.name = n;
         this.color = c;
+        show = true;
     }
 
     public String getName()
@@ -32,5 +34,12 @@ public class Categorie {
     public void setColor(int c)
     {
         this.color = c;
+    }
+
+    public boolean getShow() {
+        return this.show;
+    }
+    public void setShow(boolean show1) {
+        this.show = show1;
     }
 }

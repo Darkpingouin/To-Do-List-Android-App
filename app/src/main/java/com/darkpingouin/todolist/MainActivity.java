@@ -16,9 +16,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
@@ -66,7 +66,7 @@ public class MainActivity extends ActionBarActivity {
         cat.add(new Categorie("Travail", Color.parseColor("#FFEEAA")));
         cat.add(new Categorie("Urgent", Color.parseColor("#DD5588")));
         saveCategory();*/
-        Switch switchTodo = (Switch) findViewById(R.id.switch_todo);
+        /*Switch switchTodo = (Switch) findViewById(R.id.switch_todo);
         switchTodo.setChecked(true);
         switchTodo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -76,7 +76,20 @@ public class MainActivity extends ActionBarActivity {
                     aff_todo = false;
                 affListCorresponding();
             }
+        });*/
+        CheckBox checkToDo = (CheckBox) findViewById(R.id.switch_todo);
+        checkToDo.setChecked(true);
+        checkToDo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b)
+                    aff_todo = true;
+                else
+                    aff_todo = false;
+                affListCorresponding();
+            }
         });
+        /*
         Switch switchDone = (Switch) findViewById(R.id.switch_done);
         switchDone.setDrawingCacheBackgroundColor(Color.RED);
 
@@ -90,7 +103,21 @@ public class MainActivity extends ActionBarActivity {
                     aff_done = false;
                 affListCorresponding();
             }
+        });*/
+
+        CheckBox checkDone = (CheckBox) findViewById(R.id.switch_done);
+        checkDone.setChecked(true);
+        checkDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    aff_done = true;
+                else
+                    aff_done = false;
+                affListCorresponding();
+            }
         });
+
+        /*
         Switch switchPassed = (Switch) findViewById(R.id.switch_passed);
         switchPassed.setChecked(true);
         switchPassed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -101,7 +128,21 @@ public class MainActivity extends ActionBarActivity {
                     aff_passed = false;
                 affListCorresponding();
             }
+        });*/
+
+        CheckBox checkPassed = (CheckBox) findViewById(R.id.switch_passed);
+        checkPassed.setChecked(true);
+        checkPassed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    aff_passed = true;
+                else
+                    aff_passed = false;
+                affListCorresponding();
+            }
         });
+
+        /*
         Switch switchOnDate = (Switch) findViewById(R.id.switch_ondate);
         switchOnDate.setChecked(true);
         switchOnDate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -112,7 +153,21 @@ public class MainActivity extends ActionBarActivity {
                     aff_ondate = false;
                 affListCorresponding();
             }
+        });*/
+
+        CheckBox checkOnDate = (CheckBox) findViewById(R.id.switch_ondate);
+        checkOnDate.setChecked(true);
+        checkOnDate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    aff_ondate = true;
+                else
+                    aff_ondate = false;
+                affListCorresponding();
+            }
         });
+
+
         try {
             getData();
         } catch (ParseException e) {

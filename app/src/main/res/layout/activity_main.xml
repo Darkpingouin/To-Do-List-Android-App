@@ -73,27 +73,55 @@
         android:layout_height="match_parent"
         android:layout_gravity="start|left"
         android:orientation="vertical" >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="Settings"/>
-        <Switch
+        <RelativeLayout
+            android:id="@+id/top"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimary">
+            <TextView
+                android:id="@+id/nb_tasks"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="Settings"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="30dp"
+                android:background="#2A2A2A"
+                android:layout_height="30dp"
+                android:src="@drawable/done"/>
+            <TextView
+                android:text="Tasks"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <CheckBox
             android:text="Done"
             android:id="@+id/switch_done"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <Switch
+        <CheckBox
             android:text="To do"
             android:id="@+id/switch_todo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <Switch
+        <CheckBox
             android:text="Passed"
             android:id="@+id/switch_passed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <Switch
+        <CheckBox
             android:text="Up to Date"
             android:id="@+id/switch_ondate"
             android:layout_width="match_parent"
