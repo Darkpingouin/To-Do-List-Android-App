@@ -63,21 +63,7 @@ public class MainActivity extends ActionBarActivity {
         aff_passed = true;
         aff_ondate = true;
         id = 0;
-        /*cat.add(new Categorie("none", Color.parseColor("#DFDFDF")));
-        cat.add(new Categorie("Travail", Color.parseColor("#FFEEAA")));
-        cat.add(new Categorie("Urgent", Color.parseColor("#DD5588")));
-        saveCategory();*/
-        /*Switch switchTodo = (Switch) findViewById(R.id.switch_todo);
-        switchTodo.setChecked(true);
-        switchTodo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    aff_todo = true;
-                else
-                    aff_todo = false;
-                affListCorresponding();
-            }
-        });*/
+
         CheckBox checkToDo = (CheckBox) findViewById(R.id.switch_todo);
         checkToDo.setChecked(true);
         checkToDo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -90,22 +76,6 @@ public class MainActivity extends ActionBarActivity {
                 affListCorresponding();
             }
         });
-        /*
-        Switch switchDone = (Switch) findViewById(R.id.switch_done);
-        switchDone.setDrawingCacheBackgroundColor(Color.RED);
-
-
-        switchDone.setChecked(true);
-        switchDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    aff_done = true;
-                else
-                    aff_done = false;
-                affListCorresponding();
-            }
-        });*/
-
         CheckBox checkDone = (CheckBox) findViewById(R.id.switch_done);
         checkDone.setChecked(true);
         checkDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -117,20 +87,6 @@ public class MainActivity extends ActionBarActivity {
                 affListCorresponding();
             }
         });
-
-        /*
-        Switch switchPassed = (Switch) findViewById(R.id.switch_passed);
-        switchPassed.setChecked(true);
-        switchPassed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    aff_passed = true;
-                else
-                    aff_passed = false;
-                affListCorresponding();
-            }
-        });*/
-
         CheckBox checkPassed = (CheckBox) findViewById(R.id.switch_passed);
         checkPassed.setChecked(true);
         checkPassed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -142,20 +98,6 @@ public class MainActivity extends ActionBarActivity {
                 affListCorresponding();
             }
         });
-
-        /*
-        Switch switchOnDate = (Switch) findViewById(R.id.switch_ondate);
-        switchOnDate.setChecked(true);
-        switchOnDate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                    aff_ondate = true;
-                else
-                    aff_ondate = false;
-                affListCorresponding();
-            }
-        });*/
-
         CheckBox checkOnDate = (CheckBox) findViewById(R.id.switch_ondate);
         checkOnDate.setChecked(true);
         checkOnDate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -208,23 +150,7 @@ public class MainActivity extends ActionBarActivity {
                 startActivityForResult(intentMain, 1);
             }
         });
-        checkListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                System.out.println("MDRRRR SELECTED");
-                saveCategory();
-                affListCorresponding();
-                ((checkAdapter) checkListView.getAdapter()).notifyDataSetChanged();
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                System.out.println("MDRRRR NOTHING SELECTED");
-                saveCategory();
-                affListCorresponding();
-                ((checkAdapter) checkListView.getAdapter()).notifyDataSetChanged();
-            }
-        });
         ItemAdapter adapter = new ItemAdapter(MainActivity.this, items);
         checkAdapter adapter1 = new checkAdapter(MainActivity.this, cat);
         checkListView.setAdapter(adapter1);
@@ -672,6 +598,7 @@ public class MainActivity extends ActionBarActivity {
                 p = true;
             if (t && p && showCatForItem(items.get(i)))
                 tmp.add(items.get(i));
+            System.out.println(showCatForItem(items.get(i)));
             i++;
         }
         ItemAdapter adapter = new ItemAdapter(MainActivity.this, tmp);
@@ -690,6 +617,17 @@ public class MainActivity extends ActionBarActivity {
         affListCorresponding();
         saveData();
         s.close(true);
+    }
+
+    public void catCheck(View v)
+    {
+        final int position = checkListView.getPositionForView((View) v.getParent());
+        CheckBox checkBox = (CheckBox)v;
+        if(checkBox.isChecked())
+            cat.get(position).setShow(true);
+        else
+            cat.get(position).setShow(false);
+        affListCorresponding();
     }
 
     public void doneClick(View v) {

@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import java.util.List;
 
@@ -41,12 +40,15 @@ public class checkAdapter extends ArrayAdapter<Categorie> {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             viewHolder.name.setButtonTintList(ColorStateList.valueOf(cat.getColor()));
         }
-        viewHolder.name.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        /*viewHolder.name.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 cat.setShow(b);
+                System.out.println("MDRRRRR INFORMATIQUE");
+                MainActivity.cat.notifyAll();
+                ((ItemAdapter) MainActivity.mListView.getAdapter()).notifyDataSetChanged();
             }
-        });
+        });*/
         return convertView;
     }
 
