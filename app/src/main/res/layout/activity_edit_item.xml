@@ -28,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:onClick="save"
-            android:visibility="invisible"
             android:id="@+id/save"
             android:text="Enregistrer"
             android:textColor="#FFFFFF"
@@ -54,14 +53,6 @@
             android:textSize="22dp"
             android:textStyle="bold" />
 
-        <ImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:onClick="edit"
-            android:src="@drawable/edit"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
     <LinearLayout

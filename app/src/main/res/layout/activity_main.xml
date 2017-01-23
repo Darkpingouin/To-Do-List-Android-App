@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/colorPrimary">
+
             <TextView
                 android:id="@+id/nb_tasks"
                 android:layout_width="match_parent"
@@ -30,11 +31,11 @@
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:paddingLeft="10dp"
                 android:layout_centerVertical="true"
+                android:contentDescription="menu_list"
                 android:onClick="settings"
-                android:src="@drawable/menu"
-                android:contentDescription="menu_list" />
+                android:paddingLeft="10dp"
+                android:src="@drawable/menu" />
 
         </RelativeLayout>
 
@@ -42,6 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/top">
+
             <ListView
                 android:id="@+id/listView"
                 android:layout_width="wrap_content"
@@ -49,6 +51,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/top" />
+
             <ImageView
                 android:id="@+id/add_btn"
                 android:layout_width="80dp"
@@ -61,18 +64,22 @@
                 android:src="@drawable/plus" />
         </RelativeLayout>
     </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/left_drawer"
         android:layout_width="200dp"
-        android:background="#FFFFFF"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
         android:layout_gravity="start|left"
-        android:orientation="vertical" >
+        android:background="#FFFFFF"
+        android:fillViewport="true"
+        android:orientation="vertical">
+
         <RelativeLayout
             android:id="@+id/top2"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/colorPrimary">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -82,61 +89,134 @@
                 android:textColor="#FFFFFF"
                 android:textSize="18dp"
                 android:textStyle="bold" />
+
             <ImageView
                 android:layout_width="40dp"
-                android:padding="10dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
-                android:onClick="closeMenu"
                 android:layout_height="40dp"
-                android:src="@drawable/close"/>
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:onClick="closeMenu"
+                android:padding="10dp"
+                android:src="@drawable/close" />
         </RelativeLayout>
+
         <LinearLayout
-            android:orientation="horizontal"
+            android:background="#EFEFEF"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp">
+
             <ImageView
-                android:layout_width="30dp"
-                android:background="#2A2A2A"
-                android:layout_height="30dp"
-                android:src="@drawable/done"/>
+                android:id="@+id/label"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/donetask" />
+
             <TextView
-                android:text="Tasks"
-                android:textStyle="bold"
-                android:textSize="15dp"
-                android:gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:padding="10dp"
+                android:text="Status"
+                android:textSize="20sp" />
+
         </LinearLayout>
+
+
+
         <CheckBox
-            android:text="Done"
             android:id="@+id/switch_done"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Done" />
+
         <CheckBox
-            android:text="To do"
             android:id="@+id/switch_todo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="To do" />
+
+
+
+        <LinearLayout
+            android:background="#EFEFEF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp">
+
+            <ImageView
+                android:id="@+id/label"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_date_range_black_24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:padding="10dp"
+                android:text="Date"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+
         <CheckBox
-            android:text="Passed"
             android:id="@+id/switch_passed"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Passed" />
+
         <CheckBox
-            android:text="Up to Date"
             android:id="@+id/switch_ondate"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Up to Date" />
+        <LinearLayout
+            android:background="#EFEFEF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="2dp">
+
+            <ImageView
+                android:id="@+id/label"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/label" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:padding="10dp"
+                android:text="Categories"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:onClick="addCategorie"
+                android:src="@drawable/config" />
+        </LinearLayout>
+
+
+
         <ListView
             android:id="@+id/checkCat"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </ListView>
-        <TextView
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="addCategorie"
-            android:text="+ Add category"/>
+            android:fillViewport="true">
+
+
+        </ListView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DFDFDF" />
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,8 +26,6 @@ import java.util.List;
 public class EditItem extends AppCompatActivity {
 
     int year, month, day, hour, minute;
-    boolean editDate = false;
-    boolean editTime = false;
     Spinner spinner2;
 
     @Override
@@ -86,12 +85,10 @@ public class EditItem extends AppCompatActivity {
     }
 
     public void setDate(View view) {
-        if (editDate)
             showDialog(999);
     }
 
     public void setTime(View view) {
-        if (editTime)
             showDialog(998);
     }
 
@@ -151,19 +148,6 @@ public class EditItem extends AppCompatActivity {
         ((TextView) findViewById(R.id.time2)).setText(String.format("%02d", hour) + ":" + String.format("%02d", minute));
     }
 
-    public void edit(View v) {
-        TextView textView = (TextView) findViewById(R.id.txt);
-        textView.setFocusable(true);
-        textView.setFocusableInTouchMode(true);
-        TextView titleView = (TextView) findViewById(R.id.title);
-        titleView.setFocusable(true);
-        titleView.setFocusableInTouchMode(true);
-        editDate = true;
-        editTime = true;
-        TextView save = (TextView) findViewById(R.id.save);
-        save.setVisibility(View.VISIBLE);
-    }
-
     public void delete(View v) {
         String title = ((TextView) findViewById(R.id.title)).getText().toString();
         String txt = ((TextView) findViewById(R.id.txt)).getText().toString();
@@ -181,21 +165,28 @@ public class EditItem extends AppCompatActivity {
         finish();
     }
 
-    public void save(View v) {
+    public void save(View v) throws ParseException {
+        Date current = new Date();
         String title = ((TextView) findViewById(R.id.title)).getText().toString();
         String txt = ((TextView) findViewById(R.id.txt)).getText().toString().replace('<', ' ');
         String d = ((TextView) findViewById(R.id.date2)).getText().toString() + " " + ((TextView) findViewById(R.id.time2)).getText().toString();
         String categorie = String.valueOf(spinner2.getSelectedItem());
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("title", title);
-        returnIntent.putExtra("txt", txt);
-        returnIntent.putExtra("date", d);
-        returnIntent.putExtra("edit", "true");
-        returnIntent.putExtra("position", getIntent().getStringExtra("position"));
-        returnIntent.putExtra("categorie", categorie);
-        returnIntent.putExtra("delete", "false");
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
+        SimpleDateFormat newDateFormat = new SimpleDateFormat("EE d MMM yyyy k:m");
+        Date date = newDateFormat.parse(d);
+        if (date.after(current)) {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("title", title);
+            returnIntent.putExtra("txt", txt);
+            returnIntent.putExtra("date", d);
+            returnIntent.putExtra("edit", "true");
+            returnIntent.putExtra("position", getIntent().getStringExtra("position"));
+            returnIntent.putExtra("categorie", categorie);
+            returnIntent.putExtra("delete", "false");
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
+        }
+        else
+            Toast.makeText(getApplicationContext(), "Error you can't enter a date that is already passed !", Toast.LENGTH_SHORT).show();
     }
 
     public void cancel(View v) {
