@@ -130,7 +130,7 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
         if (cat.size() == 0)
-            cat.add(new Categorie("none", Color.parseColor("#DFDFDF")));
+            cat.add(new Categorie("none", Color.parseColor("#262D3B")));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -156,8 +156,19 @@ public class MainActivity extends ActionBarActivity {
         checkListView.setAdapter(adapter1);
         mListView.setAdapter(adapter);
         checkDate();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
 
+    /**
+     * Parse les data en Items
+     *
+     * @param data
+     * @return
+     * @throws ParseException
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
     public List<Item> dataToItems(String data) throws ParseException, XmlPullParserException, IOException {
         List<Item> list = new ArrayList<>();
         Item tmp;
@@ -181,8 +192,7 @@ public class MainActivity extends ActionBarActivity {
                     String d = xpp.getText();
                     SimpleDateFormat newDateFormat = new SimpleDateFormat("EE d MMM yyyyHH:mm");
                     date = newDateFormat.parse(d);
-                }
-                else if (f == 2)
+                } else if (f == 2)
                     status = xpp.getText();
                 else if (f == 3)
                     txt = xpp.getText();
@@ -206,6 +216,15 @@ public class MainActivity extends ActionBarActivity {
         return list;
     }
 
+    /**
+     * Parsse les data en Catégories
+     *
+     * @param data
+     * @return
+     * @throws ParseException
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
     public ArrayList<Categorie> dataToCat(String data) throws ParseException, XmlPullParserException, IOException {
         ArrayList<Categorie> list = new ArrayList<Categorie>();
         Categorie tmp;
@@ -238,6 +257,13 @@ public class MainActivity extends ActionBarActivity {
         return list;
     }
 
+    /**
+     * Lis le fichier et parse les data
+     *
+     * @throws ParseException
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
     public void getData() throws ParseException, IOException, XmlPullParserException {
         int c;
         String temp = "";
@@ -266,6 +292,13 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Lis le fichier et parse les data
+     *
+     * @throws ParseException
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
     public void getCatData() throws ParseException, IOException, XmlPullParserException {
         int c;
         String temp = "";
@@ -294,6 +327,9 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Sauvegarde les tasks dans un fichier
+     */
     public void saveData() {
         FileOutputStream fOut = null;
         try {
@@ -389,6 +425,10 @@ public class MainActivity extends ActionBarActivity {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Sauvegarde les catégories dans un fichier
+     */
     public void saveCategory() {
         FileOutputStream fOut = null;
         try {
@@ -450,11 +490,21 @@ public class MainActivity extends ActionBarActivity {
         return cal.getTime();
     }
 
+    /**
+     * Ouvre le menu settings pour l'affichage et les catégories
+     *
+     * @param V
+     */
     public void settings(View V) {
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.openDrawer(Gravity.LEFT);
     }
 
+    /**
+     * Ouvre l'activité pour ajouter un Item
+     *
+     * @param v
+     */
     public void add(View v) {
         Intent intentMain = new Intent(MainActivity.this, AddItem.class);
         startActivityForResult(intentMain, 1);
@@ -517,6 +567,9 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Affiche en rouge la date de la l'item si la date est déjà passée
+     */
     public void checkDate() {
         int i = 0;
         Date d;
@@ -535,42 +588,82 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * Ajoute un item à la liste des items
+     *
+     * @param item
+     * @throws ParseException
+     */
     public void addToList(Item item) throws ParseException {
         items.add(item);
         checkDate();
         saveData();
         Date f = new Date();
+        int c = 0;
+        int color = Color.BLUE;
+        while (c < cat.size()) {
+            if (item.getCategorie().equals(cat.get(c).getName())) {
+                System.out.println("FOUND CAT");
+                color = cat.get(c).getColor();
+            }
+            c++;
+        }
         int delay = (int) (item.getRealDate().getTime() - f.getTime());
         if (delay > 0)
-            scheduleNotification(getNotification(item.getTitle()), delay);
+            scheduleNotification(getNotification(item.getTitle(), color), delay);
         affListCorresponding();
     }
 
-    public void modifyItem(int position, String title, String txt, Date d, String delete, String cat) throws ParseException {
+    /**
+     * Modifie un item déja existant
+     *
+     * @param position
+     * @param title
+     * @param txt
+     * @param d
+     * @param delete
+     * @param cate
+     * @throws ParseException
+     */
+    public void modifyItem(int position, String title, String txt, Date d, String delete, String cate) throws ParseException {
         Item item = items.get(position);
         if (delete.equals("false")) {
             item.setTitle(title);
             item.setText(txt);
             item.setDueDate(d);
-            item.setCategorie(cat);
+            item.setCategorie(cate);
         } else
             items.remove(item);
         checkDate();
         saveData();
         Date f = new Date();
         int delay = (int) (d.getTime() - f.getTime());
+        int color = Color.BLUE;
+        int c = 0;
+        while (c < cat.size()) {
+            System.out.print("CATEGORY : " + item.getCategorie());
+            if (item.getCategorie().equals(cat.get(c).getName())) {
+                System.out.println("FOUND CAT2");
+                color = cat.get(c).getColor();
+            }
+            c++;
+        }
         if (delay > 0)
-            scheduleNotification(getNotification(title), delay);
+            scheduleNotification(getNotification(title, color), delay);
         affListCorresponding();
     }
 
-    public void changeCats()
-    {
+    public void changeCats() {
         affListCorresponding();
     }
 
-    public boolean showCatForItem(Item item)
-    {
+    /**
+     * Permet de savoir si l'item doit être affiché en fonction de sa catégorie
+     *
+     * @param item
+     * @return
+     */
+    public boolean showCatForItem(Item item) {
         int i = 0;
         while (i < cat.size()) {
             if (cat.get(i).getName().equals(item.getCategorie())) {
@@ -580,6 +673,10 @@ public class MainActivity extends ActionBarActivity {
         }
         return false;
     }
+
+    /**
+     * Permet d'afficher les tasks en fonctions des restrictions de l'utilisateur (statut, date, catégories etc...)
+     */
     public void affListCorresponding() {
         int nb_items = items.size();
         boolean t, p;
@@ -603,10 +700,18 @@ public class MainActivity extends ActionBarActivity {
         }
         ItemAdapter adapter = new ItemAdapter(MainActivity.this, tmp);
         mListView.setAdapter(adapter);
+        if (tmp.size() > 1)
+            ((TextView) findViewById(R.id.nb_tasks)).setText(String.valueOf(tmp.size()) + " Tasks");
+        else
+            ((TextView) findViewById(R.id.nb_tasks)).setText(String.valueOf(tmp.size()) + " Task");
         adapter.notifyDataSetChanged();
     }
 
-
+    /**
+     * Passe le status d'une task en to do
+     *
+     * @param v
+     */
     public void todoClick(View v) {
         final int position = mListView.getPositionForView((View) v.getParent());
         SwipeLayout s = (SwipeLayout) mListView.getChildAt(position);
@@ -619,17 +724,26 @@ public class MainActivity extends ActionBarActivity {
         s.close(true);
     }
 
-    public void catCheck(View v)
-    {
+    /**
+     * Passe une catégorie en visible ou invisible
+     *
+     * @param v
+     */
+    public void catCheck(View v) {
         final int position = checkListView.getPositionForView((View) v.getParent());
-        CheckBox checkBox = (CheckBox)v;
-        if(checkBox.isChecked())
+        CheckBox checkBox = (CheckBox) v;
+        if (checkBox.isChecked())
             cat.get(position).setShow(true);
         else
             cat.get(position).setShow(false);
         affListCorresponding();
     }
 
+    /**
+     * Change le status de la task à Done
+     *
+     * @param v
+     */
     public void doneClick(View v) {
         final int position = mListView.getPositionForView((View) v.getParent());
         SwipeLayout s = (SwipeLayout) mListView.getChildAt(position);
@@ -642,6 +756,12 @@ public class MainActivity extends ActionBarActivity {
         saveData();
     }
 
+    /**
+     * Permet de preparer une notification
+     *
+     * @param notification
+     * @param delay
+     */
     private void scheduleNotification(Notification notification, int delay) {
 
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
@@ -652,22 +772,35 @@ public class MainActivity extends ActionBarActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 
+    /**
+     * Permet à l'utilisateur de recevoir des notifications concernant ses taches
+     *
+     * @param content le contenu de la notification
+     * @return un builder
+     */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    private Notification getNotification(String content) {
+    private Notification getNotification(String content, int color) {
         Notification.Builder builder = new Notification.Builder(this);
         builder.setContentTitle("To Do");
         builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.ic_notif);
-        //builder.setColor(Color.parseColor("#102372"));
+        builder.setSmallIcon(R.drawable.ic_notification);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setColor(color);
+        }
         affListCorresponding();
         return builder.build();
     }
-    public static ArrayList<Categorie> getCatA()
-    {
+
+    /**
+     * Renvoies l'arraylist contenant les catégries
+     *
+     * @return l'array list contenant la ou les catégories
+     */
+    public static ArrayList<Categorie> getCatA() {
         ArrayList<Categorie> tmp = new ArrayList<Categorie>();
         int i = 0;
         while (i < cat.size())
@@ -675,21 +808,51 @@ public class MainActivity extends ActionBarActivity {
         return tmp;
     }
 
-    public void closeMenu(View v)
-    {
+    /**
+     * Ferme le drawer menu
+     *
+     * @param v
+     */
+    public void closeMenu(View v) {
         DrawerLayout d = ((DrawerLayout) findViewById(R.id.drawer_layout));
         d.closeDrawers();
     }
-    public static ArrayList<Categorie> getCat()
-    {
+
+    public static ArrayList<Categorie> getCat() {
         return (getCatA());
     }
 
-    public void addCategorie(View v)
-    {
+    /**
+     * Verifie si une catégorie à été supprimé et update les tasks si c'est le cas.
+     */
+
+    public void checkCategories() {
+        int i = 0;
+
+        while (i < items.size()) {
+            int c = 0;
+            boolean found = false;
+            while (c < cat.size()) {
+                if (items.get(i).getCategorie().equals(cat.get(c)))
+                    found = true;
+                c++;
+            }
+            if (!found)
+                items.get(i).setCategorie("none");
+            i++;
+        }
+        affListCorresponding();
+    }
+
+    /**
+     * Permet d'ajouter une catégorie via un menu
+     *
+     * @param v
+     */
+    public void addCategorie(View v) {
         Intent intentMain = new Intent(MainActivity.this, addCategory.class);
         startActivityForResult(intentMain, 2);
-        //startActivity(intentMain);
-        System.out.println("MDRRRRRR");
+        checkCategories();
     }
 }
+

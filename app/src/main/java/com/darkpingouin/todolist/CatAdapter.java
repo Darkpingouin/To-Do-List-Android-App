@@ -32,8 +32,10 @@ public class CatAdapter extends ArrayAdapter<Categorie> {
             convertView.setTag(viewHolder);
         }
         Categorie cat = getItem(position);
-        viewHolder.name.setText(cat.getName());
-        viewHolder.color.setBackgroundColor(cat.getColor());
+        if (cat != null) {
+            viewHolder.name.setText(cat.getName());
+            viewHolder.color.setBackgroundColor(cat.getColor());
+        }
         return convertView;
     }
 

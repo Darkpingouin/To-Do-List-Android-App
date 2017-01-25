@@ -27,6 +27,7 @@ public class EditItem extends AppCompatActivity {
 
     int year, month, day, hour, minute;
     Spinner spinner2;
+    String previousDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class EditItem extends AppCompatActivity {
         String txt = getIntent().getStringExtra("txt");
         String date = getIntent().getStringExtra("date");
         String time = getIntent().getStringExtra("time");
+        previousDate = date + " " + time;
         String categorie = getIntent().getStringExtra("categorie");
         spinner2 = (Spinner) findViewById(R.id.spinner2);
         addItemsOnSpinner2();
@@ -173,7 +175,8 @@ public class EditItem extends AppCompatActivity {
         String categorie = String.valueOf(spinner2.getSelectedItem());
         SimpleDateFormat newDateFormat = new SimpleDateFormat("EE d MMM yyyy k:m");
         Date date = newDateFormat.parse(d);
-        if (date.after(current)) {
+        Date oldDate = newDateFormat.parse(previousDate);
+        if (date.after(current) || date.equals(oldDate)) {
             Intent returnIntent = new Intent();
             returnIntent.putExtra("title", title);
             returnIntent.putExtra("txt", txt);

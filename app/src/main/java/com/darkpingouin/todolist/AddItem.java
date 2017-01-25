@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -27,7 +26,6 @@ import java.util.List;
 import static com.darkpingouin.todolist.R.id.date;
 
 public class AddItem extends AppCompatActivity {
-    private DatePicker datePicker;
     private Calendar calendar;
     public Spinner spinner2;
     private TextView dateView, timeView;
@@ -56,20 +54,20 @@ public class AddItem extends AppCompatActivity {
         addItemsOnSpinner2();
     }
     public void addItemsOnSpinner2() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         int i = 0;
         while (i < MainActivity.getCat().size()) {
             list.add(MainActivity.getCat().get(i).getName());
             i++;
         }
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ((RelativeLayout) findViewById(R.id.textBar)).setBackgroundColor(MainActivity.getCat().get(position).getColor());
-                ((TextView) findViewById(R.id.title)).setBackgroundColor(MainActivity.getCat().get(position).getColor());
+                findViewById(R.id.textBar).setBackgroundColor(MainActivity.getCat().get(position).getColor());
+                findViewById(R.id.title).setBackgroundColor(MainActivity.getCat().get(position).getColor());
             }
 
             @Override

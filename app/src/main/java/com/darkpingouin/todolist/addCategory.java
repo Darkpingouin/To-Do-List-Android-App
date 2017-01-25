@@ -26,7 +26,7 @@ public class addCategory extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_category);
-        finalColor = Color.parseColor("#DFDFDF");
+        finalColor = Color.parseColor("#262D3B");
         mListView = (ListView) findViewById(R.id.listView);
         cat2 = MainActivity.getCat();
         CatAdapter adapter = new CatAdapter(addCategory.this, cat2);
@@ -44,7 +44,7 @@ public class addCategory extends AppCompatActivity {
                 if (color != 0)
                     finalColor = color;
                 else
-                    finalColor = Color.parseColor("#DFDFDF");
+                    finalColor = Color.parseColor("#262D3B");
                 //((View) findViewById(R.id.color)).setBackgroundColor(color);
                 dialog.findViewById(R.id.color).setBackgroundColor(finalColor);
             }

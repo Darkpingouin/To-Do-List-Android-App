@@ -13,7 +13,7 @@
             android:id="@+id/color"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:background="#DFDFDF"
+            android:background="#262D3B"
             android:onClick="setColor"
             android:padding="10dp"></View>
 

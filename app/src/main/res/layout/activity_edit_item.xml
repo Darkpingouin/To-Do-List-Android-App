@@ -41,7 +41,6 @@
         android:orientation="horizontal"
         android:layout_height="wrap_content">
         <EditText
-            android:focusable="false"
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -126,7 +125,6 @@
     <EditText
         android:id="@+id/txt"
         android:inputType="textMultiLine"
-        android:focusable="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"

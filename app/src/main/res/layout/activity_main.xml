@@ -49,8 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/top" />
+                android:layout_alignParentStart="true" />
 
             <ImageView
                 android:id="@+id/add_btn"
@@ -107,7 +106,7 @@
             android:paddingLeft="2dp">
 
             <ImageView
-                android:id="@+id/label"
+                android:id="@+id/doneT"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
@@ -146,7 +145,6 @@
             android:paddingLeft="2dp">
 
             <ImageView
-                android:id="@+id/label"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
@@ -181,7 +179,6 @@
             android:paddingLeft="2dp">
 
             <ImageView
-                android:id="@+id/label"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
@@ -190,7 +187,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="false"
+                android:onClick="addCategorie"
                 android:padding="10dp"
                 android:text="Categories"
                 android:textSize="20sp" />
