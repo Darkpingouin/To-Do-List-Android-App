@@ -59,6 +59,9 @@ public class EditItem extends AppCompatActivity {
         ((TextView) findViewById(R.id.txt)).setText(txt);
     }
 
+    /**
+     * Ajoute les catégories dans le spinner
+     */
     public void addItemsOnSpinner2() {
         List<String> list = new ArrayList<String>();
         int i = 0;
@@ -86,10 +89,18 @@ public class EditItem extends AppCompatActivity {
         spinner2.setAdapter(dataAdapter);
     }
 
+    /**
+     * Set la date
+     * @param view
+     */
     public void setDate(View view) {
             showDialog(999);
     }
 
+    /**
+     * set l'heure
+     * @param view
+     */
     public void setTime(View view) {
             showDialog(998);
     }
@@ -137,6 +148,13 @@ public class EditItem extends AppCompatActivity {
                 }
             };
 
+    /**
+     * Aaffiche la date
+     * @param year
+     * @param month
+     * @param day
+     * @throws ParseException
+     */
     private void showDate(int year, int month, int day) throws ParseException {
         String d = (String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year);
         SimpleDateFormat newDateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -146,10 +164,19 @@ public class EditItem extends AppCompatActivity {
         ((TextView) findViewById(R.id.date2)).setText(MySDate);
     }
 
+    /**
+     * Affiche l'heure
+     * @param hour
+     * @param minute
+     */
     private void showTime(int hour, int minute) {
         ((TextView) findViewById(R.id.time2)).setText(String.format("%02d", hour) + ":" + String.format("%02d", minute));
     }
 
+    /**
+     * Supprime la tache
+     * @param v
+     */
     public void delete(View v) {
         String title = ((TextView) findViewById(R.id.title)).getText().toString();
         String txt = ((TextView) findViewById(R.id.txt)).getText().toString();
@@ -167,6 +194,11 @@ public class EditItem extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Enregistre les modifications
+     * @param v
+     * @throws ParseException
+     */
     public void save(View v) throws ParseException {
         Date current = new Date();
         String title = ((TextView) findViewById(R.id.title)).getText().toString();
@@ -192,6 +224,10 @@ public class EditItem extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Error you can't enter a date that is already passed !", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Ferme la vue
+     * @param v
+     */
     public void cancel(View v) {
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, returnIntent);

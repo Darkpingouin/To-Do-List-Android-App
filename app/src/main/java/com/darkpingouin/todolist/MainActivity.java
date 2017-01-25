@@ -555,11 +555,13 @@ public class MainActivity extends ActionBarActivity {
                 int color = Integer.parseInt(sColor);
                 cat.add(new Categorie(name, color));*/
                 saveCategory();
+                checkCategories();
                 affListCorresponding();
                 ((checkAdapter) checkListView.getAdapter()).notifyDataSetChanged();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 saveCategory();
+                checkCategories();
                 affListCorresponding();
                 ((checkAdapter) checkListView.getAdapter()).notifyDataSetChanged();
                 //here goes nothing
@@ -610,7 +612,7 @@ public class MainActivity extends ActionBarActivity {
         }
         int delay = (int) (item.getRealDate().getTime() - f.getTime());
         if (delay > 0)
-            scheduleNotification(getNotification(item.getTitle(), color), delay);
+            scheduleNotification(getNotification(item.getTitle(), item.getText(), color), delay);
         affListCorresponding();
     }
 
@@ -649,7 +651,7 @@ public class MainActivity extends ActionBarActivity {
             c++;
         }
         if (delay > 0)
-            scheduleNotification(getNotification(title, color), delay);
+            scheduleNotification(getNotification(title, txt, color), delay);
         affListCorresponding();
     }
 
@@ -783,9 +785,9 @@ public class MainActivity extends ActionBarActivity {
      * @return un builder
      */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    private Notification getNotification(String content, int color) {
+    private Notification getNotification(String Title, String content, int color) {
         Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("To Do");
+        builder.setContentTitle(Title);
         builder.setContentText(content);
         builder.setSmallIcon(R.drawable.ic_notification);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -833,7 +835,7 @@ public class MainActivity extends ActionBarActivity {
             int c = 0;
             boolean found = false;
             while (c < cat.size()) {
-                if (items.get(i).getCategorie().equals(cat.get(c)))
+                if (items.get(i).getCategorie().equals(cat.get(c).getName()))
                     found = true;
                 c++;
             }
@@ -850,9 +852,12 @@ public class MainActivity extends ActionBarActivity {
      * @param v
      */
     public void addCategorie(View v) {
+        System.out.println("MDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRJHHJJGHGGHG");
+        System.out.println(cat.size());
         Intent intentMain = new Intent(MainActivity.this, addCategory.class);
         startActivityForResult(intentMain, 2);
         checkCategories();
+        System.out.println(cat.size());
     }
 }
 

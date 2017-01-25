@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -37,29 +38,36 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             viewHolder.dateMonth = (TextView) convertView.findViewById(R.id.dateMonth);
             viewHolder.dateYear = (TextView) convertView.findViewById(R.id.dateYear);
             viewHolder.categorie = (TextView) convertView.findViewById(R.id.categorie);
+            viewHolder.back = (LinearLayout) convertView.findViewById(R.id.back);
             convertView.setTag(viewHolder);
         }
         Item Item = getItem(position);
         final ArrayList<Categorie> cat = MainActivity.getCat();
+        viewHolder.back.setBackgroundColor(Color.WHITE);
         boolean found = false;
         int i = 0;
         while (i < cat.size()) {
             if (Item.getCategorie().equals(cat.get(i).getName())) {
                 found = true;
+                int color = cat.get(i).getColor();
+                String lighter = "#15" + Integer.toHexString(color).substring(2);
+                System.out.println(lighter);
                 viewHolder.categorie.setBackgroundColor(cat.get(i).getColor());
+                if (Item.getStatus() == com.darkpingouin.todolist.Item.Status.DONE)
+                    viewHolder.back.setBackgroundColor(Color.parseColor(lighter));
             }
             i++;
         }
         if (!found)
         {
             Item.setCategorie("none");
+            int color = cat.get(0).getColor();
+            String lighter = "#15" + Integer.toHexString(color).substring(2);
+            if (Item.getStatus() == com.darkpingouin.todolist.Item.Status.DONE)
+                viewHolder.back.setBackgroundColor(Color.parseColor(lighter));
             viewHolder.categorie.setBackgroundColor(cat.get(0).getColor());
         }
         viewHolder.title.setText(Item.getTitle());
-        if (Item.getStatus() == com.darkpingouin.todolist.Item.Status.DONE)
-            viewHolder.text.getPaint().setStrikeThruText(true);
-        else
-            viewHolder.text.getPaint().setStrikeThruText(false);
         viewHolder.dateHour.setTextColor(Color.parseColor(Item.getDateColor()));
         viewHolder.dateMonth.setTextColor(Color.parseColor(Item.getDateColor()));
         viewHolder.dateYear.setTextColor(Color.parseColor(Item.getDateColor()));
@@ -78,6 +86,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         public TextView dateYear;
         public TextView dateMonth;
         public TextView categorie;
+        public LinearLayout back;
     }
 
     public View getViewByPosition(int pos, ListView listView) {

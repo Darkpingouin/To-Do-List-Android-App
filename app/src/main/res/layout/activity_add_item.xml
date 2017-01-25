@@ -36,7 +36,8 @@
         android:background="@color/colorPrimary"
         android:inputType="textPersonName"
         android:textColor="#FFFFFF"
-        android:text="Title"
+        android:hint="Title"
+        android:textColorHint="#DFDFDF"
         android:ems="10"
         android:textStyle="bold"
         android:id="@+id/title" />
@@ -111,7 +112,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
-        android:text="To do..."
+        android:hint="To do..."
         android:ems="10"
         android:id="@+id/txt" />
 

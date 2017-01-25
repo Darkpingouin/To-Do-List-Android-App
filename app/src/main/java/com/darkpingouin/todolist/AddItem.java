@@ -194,21 +194,24 @@ public class AddItem extends AppCompatActivity {
         Date current = new Date();
         String title = ((TextView) findViewById(R.id.title)).getText().toString();
         String txt = ((TextView) findViewById(R.id.txt)).getText().toString().replace('<', ' ');
-        String d = ((TextView) findViewById(R.id.date)).getText().toString() + " " + ((TextView) findViewById(R.id.time)).getText().toString();
-        SimpleDateFormat newDateFormat = new SimpleDateFormat("EE d MMM yyyy k:m");
-        Date date = newDateFormat.parse(d);
-        String categorie = String.valueOf(spinner2.getSelectedItem());
-        if (date.after(current)) {
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("title", title);
-            returnIntent.putExtra("txt", txt);
-            returnIntent.putExtra("date", d);
-            returnIntent.putExtra("categorie", categorie);
-            returnIntent.putExtra("edit", "false");
-            setResult(Activity.RESULT_OK, returnIntent);
-            finish();
+        if (title.equals("") || txt.equals(""))
+            Toast.makeText(getApplicationContext(), "Error title and description cannot be empty !", Toast.LENGTH_SHORT).show();
+        else {
+            String d = ((TextView) findViewById(R.id.date)).getText().toString() + " " + ((TextView) findViewById(R.id.time)).getText().toString();
+            SimpleDateFormat newDateFormat = new SimpleDateFormat("EE d MMM yyyy k:m");
+            Date date = newDateFormat.parse(d);
+            String categorie = String.valueOf(spinner2.getSelectedItem());
+            if (date.after(current)) {
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("title", title);
+                returnIntent.putExtra("txt", txt);
+                returnIntent.putExtra("date", d);
+                returnIntent.putExtra("categorie", categorie);
+                returnIntent.putExtra("edit", "false");
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+            } else
+                Toast.makeText(getApplicationContext(), "Error you can't enter a date that is already passed !", Toast.LENGTH_SHORT).show();
         }
-        else
-            Toast.makeText(getApplicationContext(), "Error you can't enter a date that is already passed !", Toast.LENGTH_SHORT).show();
     }
 }
