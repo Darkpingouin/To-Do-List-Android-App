@@ -53,6 +53,10 @@ public class AddItem extends AppCompatActivity {
         spinner2 = (Spinner) findViewById(R.id.spinner2);
         addItemsOnSpinner2();
     }
+
+    /**
+     * Ajoute les catégories dans le spinner
+     */
     public void addItemsOnSpinner2() {
         List<String> list = new ArrayList<>();
         int i = 0;
@@ -80,10 +84,17 @@ public class AddItem extends AppCompatActivity {
     }
 
     @SuppressWarnings("deprecation")
+    /**
+     * Set la date
+     */
     public void setDate(View view) {
         showDialog(999);
     }
 
+    /**
+     * Set l'heure
+     * @param view
+     */
     public void setTime(View view) {
         showDialog(998);
     }
@@ -102,6 +113,9 @@ public class AddItem extends AppCompatActivity {
         return null;
     }
 
+    /**
+     * Ouvre un picker de date
+     */
     private DatePickerDialog.OnDateSetListener myDateListener = new
             DatePickerDialog.OnDateSetListener() {
                 @Override
@@ -118,6 +132,9 @@ public class AddItem extends AppCompatActivity {
                     }
                 }
             };
+    /**
+     * Ouvre un picker d'heure
+     */
     private TimePickerDialog.OnTimeSetListener myTimeListener = new
             TimePickerDialog.OnTimeSetListener() {
                 @Override
@@ -131,6 +148,13 @@ public class AddItem extends AppCompatActivity {
                 }
             };
 
+    /**
+     * Affiche la date choisie
+     * @param year
+     * @param month
+     * @param day
+     * @throws ParseException
+     */
     private void showDate(int year, int month, int day) throws ParseException {
         String d = (String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year);
         SimpleDateFormat newDateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -141,10 +165,19 @@ public class AddItem extends AppCompatActivity {
 
     }
 
+    /**
+     * Affiche le temps dans la text view time
+     * @param hour
+     * @param minute
+     */
     private void showTime(int hour, int minute) {
         timeView.setText(String.format("%02d", hour) + ":" + String.format("%02d", minute));
     }
 
+    /**
+     * Ferme la vue
+     * @param view
+     */
     public void cancel(View view)
     {
         Intent returnIntent = new Intent();
@@ -152,6 +185,11 @@ public class AddItem extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Sauvegarde l'item et envoies les données à la Mainactivity
+     * @param view
+     * @throws ParseException
+     */
     public void save(View view) throws ParseException {
         Date current = new Date();
         String title = ((TextView) findViewById(R.id.title)).getText().toString();
