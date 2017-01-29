@@ -6,6 +6,8 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,19 +25,9 @@ import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -109,26 +101,8 @@ public class MainActivity extends ActionBarActivity {
                 affListCorresponding();
             }
         });
-
-
-        try {
-            getData();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        }
-        try {
-            getCatData();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        }
+       getData();
+        getCatData();
         if (cat.size() == 0)
             cat.add(new Categorie("none", Color.parseColor("#262D3B")));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -156,338 +130,111 @@ public class MainActivity extends ActionBarActivity {
         checkListView.setAdapter(adapter1);
         mListView.setAdapter(adapter);
         checkDate();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
 
     /**
-     * Parse les data en Items
-     *
-     * @param data
-     * @return
-     * @throws ParseException
-     * @throws XmlPullParserException
-     * @throws IOException
+     * Recup les données des tasks dans la db
      */
-    public List<Item> dataToItems(String data) throws ParseException, XmlPullParserException, IOException {
+    public void getData() {
         List<Item> list = new ArrayList<>();
         Item tmp;
-        String title = "";
-        String txt = "";
-        String status = "";
-        String cat = "";
-        Date date = new Date();
-        int f = 0;
-
-        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        XmlPullParser xpp = factory.newPullParser();
-        xpp.setInput(new StringReader(data));
-        int eventType = xpp.getEventType();
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            if (eventType == XmlPullParser.TEXT) {
-                if (f == 0)
-                    title = xpp.getText();
-                else if (f == 1) {
-                    String d = xpp.getText();
-                    SimpleDateFormat newDateFormat = new SimpleDateFormat("EE d MMM yyyyHH:mm");
-                    date = newDateFormat.parse(d);
-                } else if (f == 2)
-                    status = xpp.getText();
-                else if (f == 3)
-                    txt = xpp.getText();
-                else if (f == 4)
-                    cat = xpp.getText();
-                f++;
+        SQLiteDatabase mydatabase = openOrCreateDatabase("todolist", MODE_PRIVATE, null);
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS tasks(Titre VARCHAR, Date VARCHAR, Status VARCHAR, Txt VARCHAR, Cat VARCHAR);");
+        Cursor resultSet = mydatabase.rawQuery("Select * from tasks", null);
+        resultSet.moveToFirst();
+        int count = 0;
+        while (count < resultSet.getCount())
+        {
+            String title = resultSet.getString(resultSet.getColumnIndex("Titre"));
+            String date = resultSet.getString(resultSet.getColumnIndex("Date"));
+            String status = resultSet.getString(resultSet.getColumnIndex("Status"));
+            String txt = resultSet.getString(resultSet.getColumnIndex("Txt"));
+            String cat = resultSet.getString(resultSet.getColumnIndex("Cat"));
+            Date d = new Date();
+            SimpleDateFormat newDateFormat = new SimpleDateFormat("EE d MMM yyyyHH:mm");
+            try {
+                d = newDateFormat.parse(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
-            if (f == 5) {
-                tmp = new Item(title, txt, date);
-                if (status.equals(Item.Status.DONE.toString()))
-                    tmp.setStatus(Item.Status.DONE);
-                else
-                    tmp.setStatus(Item.Status.TODO);
-                tmp.setCategorie(cat);
-                System.out.println("ITEM : " + title + " " + txt + " " + date + " " + status);
-                list.add(tmp);
-                f = 0;
-            }
-            eventType = xpp.next();
+            tmp = new Item(title, txt, d);
+            if (status.equals(Item.Status.DONE.toString()))
+                tmp.setStatus(Item.Status.DONE);
+            else
+                tmp.setStatus(Item.Status.TODO);
+            tmp.setCategorie(cat);
+            list.add(tmp);
+            count++;
+            resultSet.moveToNext();
         }
-        return list;
+        items = list;
     }
 
     /**
-     * Parsse les data en Catégories
-     *
-     * @param data
-     * @return
-     * @throws ParseException
-     * @throws XmlPullParserException
-     * @throws IOException
+     * Recup les données des catégories dans la db
      */
-    public ArrayList<Categorie> dataToCat(String data) throws ParseException, XmlPullParserException, IOException {
-        ArrayList<Categorie> list = new ArrayList<Categorie>();
+    public void getCatData() {
+        ArrayList<Categorie> list = new ArrayList<>();
         Categorie tmp;
-        String name = "";
-        int color = 0;
-        int f = 0;
-
-        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-        factory.setNamespaceAware(true);
-        XmlPullParser xpp = factory.newPullParser();
-        xpp.setInput(new StringReader(data));
-        int eventType = xpp.getEventType();
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            if (eventType == XmlPullParser.TEXT) {
-                if (f == 0)
-                    name = xpp.getText();
-                else if (f == 1) {
-                    color = Integer.parseInt(xpp.getText());
-                }
-                f++;
-            }
-            if (f == 2) {
-                tmp = new Categorie(name, color);
-                System.out.println("CAT : " + name + " " + color);
-                list.add(tmp);
-                f = 0;
-            }
-            eventType = xpp.next();
+        SQLiteDatabase mydatabase = openOrCreateDatabase("todolist", MODE_PRIVATE, null);
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS cats(Name VARCHAR, Color VARCHAR);");
+        Cursor resultSet = mydatabase.rawQuery("Select * from cats", null);
+        resultSet.moveToFirst();
+        int count = 0;
+        while (count < resultSet.getCount()) {
+            String name = resultSet.getString(resultSet.getColumnIndex("Name"));
+            String color = resultSet.getString(resultSet.getColumnIndex("Color"));
+            tmp = new Categorie(name, Integer.parseInt(color));
+            list.add(tmp);
+            count++;
+            resultSet.moveToNext();
         }
-        return list;
+        cat = list;
     }
 
     /**
-     * Lis le fichier et parse les data
+     * Returns value to insert in db
      *
-     * @throws ParseException
-     * @throws IOException
-     * @throws XmlPullParserException
+     * @return
      */
-    public void getData() throws ParseException, IOException, XmlPullParserException {
-        int c;
-        String temp = "";
-        FileInputStream fin = null;
-        try {
-            fin = openFileInput("tasksSave");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (fin != null) {
-            try {
-                while ((c = fin.read()) != -1) {
-                    temp = temp + Character.toString((char) c);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            System.out.println(temp);
-            try {
-                fin.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            items = dataToItems(temp);
-        }
+    public String addToDataBase(int i) {
+        Item tmp = items.get(i);
+        String query = "'";
+        query += tmp.getTitle() + "','";
+        query += tmp.getDate() + tmp.getTime() + "','";
+        query += tmp.getStatus().toString() + "','";
+        query += tmp.getText() + "','";
+        query += tmp.getCategorie() + "'";
+        return query;
     }
 
     /**
-     * Lis le fichier et parse les data
-     *
-     * @throws ParseException
-     * @throws IOException
-     * @throws XmlPullParserException
-     */
-    public void getCatData() throws ParseException, IOException, XmlPullParserException {
-        int c;
-        String temp = "";
-        FileInputStream fin = null;
-        try {
-            fin = openFileInput("categorySave");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (fin != null) {
-            try {
-                while ((c = fin.read()) != -1) {
-                    temp = temp + Character.toString((char) c);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            System.out.println(temp);
-            try {
-                fin.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            cat = dataToCat(temp);
-        }
-    }
-
-    /**
-     * Sauvegarde les tasks dans un fichier
+     * Sauvegarde les tasks dans la db
      */
     public void saveData() {
-        FileOutputStream fOut = null;
-        try {
-            fOut = openFileOutput("tasksSave", Context.MODE_PRIVATE);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        //ItemAdapter a = (ItemAdapter) mListView.getAdapter();
-        Item tmp;
+        String query;
+        SQLiteDatabase mydatabase = openOrCreateDatabase("todolist", MODE_PRIVATE, null);
+        mydatabase.execSQL("DROP TABLE IF EXISTS tasks");
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS tasks(Titre VARCHAR, Date VARCHAR, Status VARCHAR, Txt VARCHAR, Cat VARCHAR);");
 
         for (int i = 0; i < items.size(); i++) {
-            tmp = items.get(i);
-            try {
-                fOut.write(("<t>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(tmp.getTitle().getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(("</t>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(("<d>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write((tmp.getDate() + tmp.getTime()).getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(("</d>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(("<s>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write((tmp.getStatus().toString()).getBytes());
-                System.out.println("SAVING HERE " + tmp.getStatus().toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(("</s>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(("<x>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write((tmp.getText()).getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(("</x>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(("<c>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write((tmp.getCategorie()).getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(("</c>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            fOut.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            query = addToDataBase(i);
+            mydatabase.execSQL("INSERT INTO tasks VALUES(" + query + ");");
         }
     }
 
     /**
-     * Sauvegarde les catégories dans un fichier
+     * Sauvegarde les catégories dans la db
      */
     public void saveCategory() {
-        FileOutputStream fOut = null;
-        try {
-            fOut = openFileOutput("categorySave", Context.MODE_PRIVATE);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        Categorie tmp;
-        System.out.println("SAVING CAT -------> " + cat.size());
+        String query;
+        SQLiteDatabase mydatabase = openOrCreateDatabase("todolist", MODE_PRIVATE, null);
+        mydatabase.execSQL("DROP TABLE IF EXISTS cats");
+        mydatabase.execSQL("CREATE TABLE IF NOT EXISTS cats(Name VARCHAR, Color VARCHAR);");
         for (int i = 0; i < cat.size(); i++) {
-            tmp = cat.get(i);
-            try {
-                fOut.write(("<n>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(tmp.getName().getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(("</n>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(("<c>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(String.valueOf(tmp.getColor()).getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.write(("</c>").getBytes());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            query = "'" + cat.get(i).getName() + "','" +  String.valueOf(cat.get(i).getColor()) + "'";
+            mydatabase.execSQL("INSERT INTO cats VALUES(" + query + ");");
         }
-        try {
-            fOut.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static Date getDate(int day, int month, int year, int hour, int min) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DAY_OF_MONTH, day);
-        cal.set(Calendar.HOUR_OF_DAY, hour);
-        cal.set(Calendar.MINUTE, min);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
     }
 
     /**
@@ -550,10 +297,6 @@ public class MainActivity extends ActionBarActivity {
         }
         if (requestCode == 2) {
             if (resultCode == Activity.RESULT_OK) {
-                /*String name = data.getStringExtra("name");
-                String sColor = data.getStringExtra("color");
-                int color = Integer.parseInt(sColor);
-                cat.add(new Categorie(name, color));*/
                 saveCategory();
                 checkCategories();
                 affListCorresponding();
@@ -564,7 +307,6 @@ public class MainActivity extends ActionBarActivity {
                 checkCategories();
                 affListCorresponding();
                 ((checkAdapter) checkListView.getAdapter()).notifyDataSetChanged();
-                //here goes nothing
             }
         }
     }
@@ -605,7 +347,6 @@ public class MainActivity extends ActionBarActivity {
         int color = Color.BLUE;
         while (c < cat.size()) {
             if (item.getCategorie().equals(cat.get(c).getName())) {
-                System.out.println("FOUND CAT");
                 color = cat.get(c).getColor();
             }
             c++;
@@ -643,9 +384,7 @@ public class MainActivity extends ActionBarActivity {
         int color = Color.BLUE;
         int c = 0;
         while (c < cat.size()) {
-            System.out.print("CATEGORY : " + item.getCategorie());
             if (item.getCategorie().equals(cat.get(c).getName())) {
-                System.out.println("FOUND CAT2");
                 color = cat.get(c).getColor();
             }
             c++;
@@ -655,9 +394,6 @@ public class MainActivity extends ActionBarActivity {
         affListCorresponding();
     }
 
-    public void changeCats() {
-        affListCorresponding();
-    }
 
     /**
      * Permet de savoir si l'item doit être affiché en fonction de sa catégorie
@@ -697,7 +433,6 @@ public class MainActivity extends ActionBarActivity {
                 p = true;
             if (t && p && showCatForItem(items.get(i)))
                 tmp.add(items.get(i));
-            System.out.println(showCatForItem(items.get(i)));
             i++;
         }
         ItemAdapter adapter = new ItemAdapter(MainActivity.this, tmp);
@@ -719,8 +454,6 @@ public class MainActivity extends ActionBarActivity {
         SwipeLayout s = (SwipeLayout) mListView.getChildAt(position);
         Item a = items.get(position);
         a.setStatus(Item.Status.TODO);
-        /*ItemAdapter b = (ItemAdapter) mListView.getAdapter();
-        b.notifyDataSetChanged();*/
         affListCorresponding();
         saveData();
         s.close(true);
@@ -768,8 +501,6 @@ public class MainActivity extends ActionBarActivity {
 
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-        //notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, id);
-        id++;
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -852,12 +583,9 @@ public class MainActivity extends ActionBarActivity {
      * @param v
      */
     public void addCategorie(View v) {
-        System.out.println("MDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRJHHJJGHGGHG");
-        System.out.println(cat.size());
         Intent intentMain = new Intent(MainActivity.this, addCategory.class);
         startActivityForResult(intentMain, 2);
         checkCategories();
-        System.out.println(cat.size());
     }
 }
 

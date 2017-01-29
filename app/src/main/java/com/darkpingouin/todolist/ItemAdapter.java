@@ -51,7 +51,6 @@ public class ItemAdapter extends ArrayAdapter<Item> {
                 found = true;
                 int color = cat.get(i).getColor();
                 String lighter = "#15" + Integer.toHexString(color).substring(2);
-                System.out.println(lighter);
                 viewHolder.categorie.setBackgroundColor(cat.get(i).getColor());
                 if (Item.getStatus() == com.darkpingouin.todolist.Item.Status.DONE)
                     viewHolder.back.setBackgroundColor(Color.parseColor(lighter));

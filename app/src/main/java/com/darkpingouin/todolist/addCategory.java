@@ -40,7 +40,6 @@ public class addCategory extends AppCompatActivity {
         colorPicker.setOnChooseColorListener(new ColorPicker.OnChooseColorListener() {
             @Override
             public void onChooseColor(int position, int color) {
-                System.out.println("Chosen" + color);
                 if (color != 0)
                     finalColor = color;
                 else
@@ -51,7 +50,7 @@ public class addCategory extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-                System.out.println("CANCEL");
+                //here goes nothing
             }
         });
     }
