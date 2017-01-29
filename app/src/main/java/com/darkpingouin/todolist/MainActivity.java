@@ -31,6 +31,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/***
+ * Classe principale du projet
+ */
 public class MainActivity extends ActionBarActivity {
 
     int id;

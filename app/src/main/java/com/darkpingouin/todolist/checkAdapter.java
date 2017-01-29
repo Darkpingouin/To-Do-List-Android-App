@@ -13,7 +13,7 @@ import android.widget.CheckBox;
 import java.util.List;
 
 /**
- * Created by Oreo on 18/01/2017.
+ * Custom adapteur pour les chckbox des catégories
  */
 
 public class checkAdapter extends ArrayAdapter<Categorie> {

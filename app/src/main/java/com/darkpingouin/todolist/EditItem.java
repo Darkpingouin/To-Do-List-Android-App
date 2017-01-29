@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Lorsqu'une task est éditée
+ */
 public class EditItem extends AppCompatActivity {
 
     int year, month, day, hour, minute;

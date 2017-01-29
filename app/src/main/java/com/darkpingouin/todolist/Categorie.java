@@ -1,7 +1,7 @@
 package com.darkpingouin.todolist;
 
 /**
- * Created by Oreo on 16/01/2017.
+ * Classe catégorie
  */
 
 public class Categorie {
@@ -59,7 +59,7 @@ public class Categorie {
 
     /**
      * Pemret de savoir si la catégorie doit être affichée
-     * @return boolean
+     * @return boolean affichage de la catgorie
      */
     public boolean getShow() {
         return this.show;

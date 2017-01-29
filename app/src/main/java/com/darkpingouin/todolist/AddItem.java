@@ -25,6 +25,9 @@ import java.util.List;
 
 import static com.darkpingouin.todolist.R.id.date;
 
+/**
+ * Lorsqu'on ajoute une task
+ */
 public class AddItem extends AppCompatActivity {
     private Calendar calendar;
     public Spinner spinner2;
@@ -86,6 +89,7 @@ public class AddItem extends AppCompatActivity {
     @SuppressWarnings("deprecation")
     /**
      * Set la date
+     * @param view View
      */
     public void setDate(View view) {
         showDialog(999);
@@ -93,7 +97,7 @@ public class AddItem extends AppCompatActivity {
 
     /**
      * Set l'heure
-     * @param view
+     * @param view View
      */
     public void setTime(View view) {
         showDialog(998);
@@ -150,9 +154,9 @@ public class AddItem extends AppCompatActivity {
 
     /**
      * Affiche la date choisie
-     * @param year
-     * @param month
-     * @param day
+     * @param year année
+     * @param month mois
+     * @param day jour
      * @throws ParseException
      */
     private void showDate(int year, int month, int day) throws ParseException {
@@ -167,8 +171,8 @@ public class AddItem extends AppCompatActivity {
 
     /**
      * Affiche le temps dans la text view time
-     * @param hour
-     * @param minute
+     * @param hour heure
+     * @param minute minute
      */
     private void showTime(int hour, int minute) {
         timeView.setText(String.format("%02d", hour) + ":" + String.format("%02d", minute));
@@ -176,7 +180,7 @@ public class AddItem extends AppCompatActivity {
 
     /**
      * Ferme la vue
-     * @param view
+     * @param view view
      */
     public void cancel(View view)
     {
@@ -187,7 +191,7 @@ public class AddItem extends AppCompatActivity {
 
     /**
      * Sauvegarde l'item et envoies les données à la Mainactivity
-     * @param view
+     * @param view view
      * @throws ParseException
      */
     public void save(View view) throws ParseException {

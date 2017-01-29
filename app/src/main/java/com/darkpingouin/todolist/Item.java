@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by Oreo on 10/01/2017.
+ * Classe Item
  */
 
 
@@ -20,9 +20,9 @@ public class Item {
 
     /**
      * Constructeur
-     * @param title
-     * @param text
-     * @param dueDate
+     * @param title titre
+     * @param text descritpion
+     * @param dueDate date
      */
     public Item(String title, String text, Date dueDate)
     {
@@ -46,7 +46,7 @@ public class Item {
 
     /**
      * Renvoie la couleur de la date
-     * @return
+     * @return la couleur de la date
      */
     public String getDateColor()
     {
@@ -73,7 +73,7 @@ public class Item {
 
     /**
      * Renvoies la description de la task
-     * @return
+     * @return la description
      */
     public String getText()
     {
@@ -82,7 +82,7 @@ public class Item {
 
     /**
      * Set la description de la tache
-     * @param text
+     * @param text la description
      */
     public void setText(String text)
     {
@@ -98,7 +98,7 @@ public class Item {
 
     /**
      * Renvoies la date au format EE d MMM yyyy
-     * @return
+     * @return la date au format EE d MMM yyyy
      */
     public String getDate()
     {
@@ -109,7 +109,7 @@ public class Item {
 
     /**
      * Renvoie l'heure au format HH:mm
-     * @return
+     * @return l'heure au format HH:mm
      */
     public String getTime()
     {
@@ -120,7 +120,7 @@ public class Item {
 
     /**
      * Renvoies la date au format dd/MM
-     * @return
+     * @return la date au format dd/MM
      */
     public String getMonth()
     {
@@ -131,7 +131,7 @@ public class Item {
 
     /**
      * Renvoies l'année au format yyyy
-     * @return
+     * @return l'année au format yyyy
      */
     public String getYear()
     {
@@ -142,7 +142,7 @@ public class Item {
 
     /**
      * Renvoie la Date
-     * @return
+     * @return la Date
      */
     public Date getRealDate()
     {
@@ -151,7 +151,7 @@ public class Item {
 
     /**
      * Set la date
-     * @param dueDate
+     * @param dueDate la date
      */
 
     public void setDueDate(Date dueDate)
@@ -161,7 +161,7 @@ public class Item {
 
     /**
      * Renvoie le status de la tache
-     * @return
+     * @return ToDo ou Done
      */
     public Status getStatus()
     {
@@ -170,7 +170,7 @@ public class Item {
 
     /**
      * Renvoie si la tache est passée dans le temps
-     * @return
+     * @return true ou false
      */
     public boolean getPassed() {
         return this.passed;
@@ -178,7 +178,7 @@ public class Item {
 
     /**
      * Set si la tache est passée dans le temps
-     * @param b
+     * @param b true ou false
      */
     public void setPassed(boolean b)
     {
@@ -187,7 +187,7 @@ public class Item {
 
     /**
      * Set le status de la tache
-     * @param status
+     * @param status ToDo ou Done
      */
     public void setStatus(Status status)
     {
@@ -196,7 +196,7 @@ public class Item {
 
     /**
      * set la catégorie de la tache
-     * @param cat
+     * @param cat la catégorie
      */
     public void setCategorie(String cat)
     {
@@ -205,7 +205,7 @@ public class Item {
 
     /**
      * Renvoie le nom de la catégorie de la tache
-     * @return
+     * @return le nom de la catégorie
      */
     public String getCategorie()
     {

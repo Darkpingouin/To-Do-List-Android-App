@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Created by Oreo on 17/01/2017.
+ * Le custom adapteur pour la listview catégorie
  */
 
 public class CatAdapter extends ArrayAdapter<Categorie> {

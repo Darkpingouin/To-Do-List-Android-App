@@ -1,7 +1,7 @@
 package com.darkpingouin.todolist;
 
 /**
- * Created by Oreo on 14/01/2017.
+ * Reçois les notifications
  */
 
 import android.app.Notification;

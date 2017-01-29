@@ -15,6 +15,9 @@ import java.util.ArrayList;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
 
+/**
+ * Pour ajouter une nouvelle categorie
+ */
 public class addCategory extends AppCompatActivity {
 
     int finalColor;
@@ -34,6 +37,11 @@ public class addCategory extends AppCompatActivity {
         mListView.setAdapter(adapter);
     }
 
+    /**
+     * Set la couleur de la catgéorie
+     * @param v
+     * @param dialog
+     */
     public void setColor(View v, final Dialog dialog) {
         ColorPicker colorPicker = new ColorPicker(this);
         colorPicker.show();
@@ -56,6 +64,10 @@ public class addCategory extends AppCompatActivity {
     }
 
 
+    /**
+     * Supprime la catégorie de la liste
+     * @param v
+     */
     public void delete(View v) {
         final int position = mListView.getPositionForView((View) v.getParent());
         if (!MainActivity.cat.get(position).getName().equals("none")) {
@@ -70,6 +82,10 @@ public class addCategory extends AppCompatActivity {
         s.close(true);
     }
 
+    /**
+     * Lorsque l'utilisateur ajoute la categorie
+     * @param view
+     */
     public void dialog(View view) {
 
         // custom dialog
@@ -117,6 +133,10 @@ public class addCategory extends AppCompatActivity {
         dialog.show();
     }
 
+    /**
+     * Ferme la vue
+     * @param v
+     */
     public void finish(View v)
     {
         finish();

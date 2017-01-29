@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Oreo on 10/01/2017.
+ * Custom adaptateur pour les Items
  */
 
 public class ItemAdapter extends ArrayAdapter<Item> {
