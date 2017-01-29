@@ -29,7 +29,7 @@
             android:layout_alignParentEnd="true"
             android:onClick="save"
             android:id="@+id/save"
-            android:text="Enregistrer"
+            android:text="Save"
             android:textColor="#FFFFFF"
             android:textSize="20dp" />
     </RelativeLayout>

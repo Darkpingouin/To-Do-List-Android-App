@@ -25,7 +25,7 @@
             android:textColor="#FFFFFF"
             android:textSize="20dp"
             android:layout_alignParentEnd="true"
-            android:text="Enregistrer"
+            android:text="Save"
             android:onClick="save"/>
     </RelativeLayout>
     <EditText
