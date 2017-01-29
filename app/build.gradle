@@ -11,7 +11,15 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+lintOptions {
+         abortOnError false
+    }
     buildTypes {
+    applicationVariants.all { variant ->                              
+        variant.outputs.each { output ->                              
+            output.outputFile = file("$project.buildDir/apk/todolist.apk")
+        }                                                             
+    }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -33,3 +41,4 @@ dependencies {
     compile 'petrov.kristiyan.colorpicker:colorpicker-library:1.1.2'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }
+
