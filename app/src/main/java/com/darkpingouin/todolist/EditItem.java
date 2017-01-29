@@ -26,12 +26,14 @@ import java.util.List;
 public class EditItem extends AppCompatActivity {
 
     int year, month, day, hour, minute;
+    boolean cancel;
     Spinner spinner2;
     String previousDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cancel = false;
         setContentView(R.layout.activity_edit_item);
         String title = getIntent().getStringExtra("title");
         String txt = getIntent().getStringExtra("txt");
@@ -172,26 +174,39 @@ public class EditItem extends AppCompatActivity {
     private void showTime(int hour, int minute) {
         ((TextView) findViewById(R.id.time2)).setText(String.format("%02d", hour) + ":" + String.format("%02d", minute));
     }
-
     /**
      * Supprime la tache
      * @param v
      */
     public void delete(View v) {
-        String title = ((TextView) findViewById(R.id.title)).getText().toString();
-        String txt = ((TextView) findViewById(R.id.txt)).getText().toString();
-        String d = ((TextView) findViewById(R.id.date2)).getText().toString() + " " + ((TextView) findViewById(R.id.time2)).getText().toString();
-        //String categorie = ((TextView) findViewById(R.id.categorie)).getText().toString();
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra("title", title);
-        returnIntent.putExtra("txt", txt);
-        returnIntent.putExtra("date", d);
-        returnIntent.putExtra("edit", "true");
-        returnIntent.putExtra("position", getIntent().getStringExtra("position"));
-        returnIntent.putExtra("categorie", "null");
-        returnIntent.putExtra("delete", "true");
-        setResult(Activity.RESULT_OK, returnIntent);
-        finish();
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.delete_task);
+        dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.findViewById(R.id.yes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String title = ((TextView) findViewById(R.id.title)).getText().toString();
+                String txt = ((TextView) findViewById(R.id.txt)).getText().toString();
+                String d = ((TextView) findViewById(R.id.date2)).getText().toString() + " " + ((TextView) findViewById(R.id.time2)).getText().toString();
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("title", title);
+                returnIntent.putExtra("txt", txt);
+                returnIntent.putExtra("date", d);
+                returnIntent.putExtra("edit", "true");
+                returnIntent.putExtra("position", getIntent().getStringExtra("position"));
+                returnIntent.putExtra("categorie", "null");
+                returnIntent.putExtra("delete", "true");
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+
+            }
+        });
+        dialog.show();
     }
 
     /**
