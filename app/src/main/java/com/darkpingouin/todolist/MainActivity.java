@@ -46,6 +46,12 @@ public class MainActivity extends ActionBarActivity {
     TextView nb_tasks;
     public static boolean aff_done, aff_todo, aff_passed, aff_ondate;
 
+
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
