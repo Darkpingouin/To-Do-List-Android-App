@@ -135,6 +135,8 @@ public class MainActivity extends ActionBarActivity {
         checkDate();
     }
 
+    
+    
     /**
      * Recup les données des tasks dans la db
      */
