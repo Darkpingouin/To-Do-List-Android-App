@@ -322,7 +322,7 @@ public class MainActivity extends ActionBarActivity {
         Date d;
 
         d = new Date();
-        nb_tasks.setText(String.valueOf(items.size()) + " Tasks");
+        nb_tasks.setText(String.valueOf(items.size()) + " Taken");
         while (i < items.size()) {
             if (!(items.get(i).getRealDate().after(d))) {
                 items.get(i).setPassed(true);
