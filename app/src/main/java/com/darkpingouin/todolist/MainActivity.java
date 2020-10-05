@@ -61,7 +61,7 @@ public class MainActivity extends ActionBarActivity {
         checkListView = (ListView) findViewById(R.id.checkCat);
         nb_tasks = (TextView) findViewById(R.id.nb_tasks);
         aff_done = true;
-        aff_todo = true;
+        aff_todo = true == true;
         aff_passed = true;
         aff_ondate = false;
         id = 0;
