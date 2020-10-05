@@ -54,6 +54,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mListView = (ListView) findViewById(R.id.listView);
@@ -62,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
         aff_done = true;
         aff_todo = true;
         aff_passed = true;
-        aff_ondate = true;
+        aff_ondate = false;
         id = 0;
 
         CheckBox checkToDo = (CheckBox) findViewById(R.id.switch_todo);
@@ -140,8 +141,6 @@ public class MainActivity extends ActionBarActivity {
         mListView.setAdapter(adapter);
         checkDate();
     }
-
-    
     
     /**
      * Recup les données des tasks dans la db
